@@ -1,0 +1,1 @@
+package com.github.ginjaninja.bb.config;import org.springframework.context.annotation.Configuration;import javax.sql.DataSource;/** * Spring DataSource config interface * */@Configurationpublic interface DataSourceConfig {    DataSource dataSource();}
