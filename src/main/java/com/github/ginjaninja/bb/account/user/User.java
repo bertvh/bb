@@ -13,6 +13,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import com.github.ginjaninja.bb.account.account.Account;
 import com.github.ginjaninja.bb.domain.DomainObject;
 
 @Entity
@@ -26,7 +27,7 @@ public class User extends DomainObject {
 	/** Account user belongs to **/
 	@ManyToOne
 	@JoinColumn(name = "account_id")
-	private Integer accountId;
+	private Account account;
 	
 	/** User's first name **/
 	@Column(name = "first_name", length = 30, nullable = false)
@@ -70,12 +71,36 @@ public class User extends DomainObject {
 		this.id = id;
 	}
 
-	public Integer getAccountId() {
-		return accountId;
+	public Account getAccount() {
+		return account;
 	}
 
-	public void setAccountId(Integer accountId) {
-		this.accountId = accountId;
+	public void setAccount(Account account) {
+		this.account = account;
+	}
+
+	public String getUserName() {
+		return userName;
+	}
+
+	public void setUserName(String userName) {
+		this.userName = userName;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
 	}
 
 	public String getFirstName() {

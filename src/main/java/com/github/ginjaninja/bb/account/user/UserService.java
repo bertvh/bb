@@ -1,6 +1,7 @@
 package com.github.ginjaninja.bb.account.user;
 
 import java.util.Collection;
+import java.util.Date;
 import java.util.Map;
 
 import javax.persistence.PersistenceException;
@@ -9,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.github.ginjaninja.bb.dao.GenericDAOImpl;
 import com.github.ginjaninja.bb.message.ResultMessage;
 import com.github.ginjaninja.bb.service.ServiceInterface;
 
@@ -18,8 +18,17 @@ import com.github.ginjaninja.bb.service.ServiceInterface;
 public class UserService implements ServiceInterface<User>{
 	
 	@Autowired
-	private GenericDAOImpl<User> dao;
+	private UserDAO dao;
+	
+	public UserService(){
+		
+	}
 
+	/**
+	 * Get user by id
+	 * @param 	id {@link Integer}
+	 * @return 	{@link ResultMessage}
+	 */
 	@Override
 	public ResultMessage get(Integer id) {
 		User user = dao.get(id);
@@ -30,13 +39,21 @@ public class UserService implements ServiceInterface<User>{
 		}
 	}
 
+	/**
+	 * Save user 
+	 * @param user {@link User}
+	 * @return {@link ResultMessage}
+	 */
 	@Override
 	public ResultMessage save(User user) {
 		ResultMessage message = null;
+		this.setDefaults(user);
 		try{
 			if(user.getId() != null){
 				user = dao.save(user);
 			}else{
+				//set createDtTm from existing record
+				user.setCreatedDtTm(dao.get(user.getId()).getCreatedDtTm());
 				user = dao.update(user);
 			}
 			message = new ResultMessage(ResultMessage.Type.SUCCESS, ResultMessage.Msg.OK.toString(), user);
@@ -48,9 +65,15 @@ public class UserService implements ServiceInterface<User>{
 		return message;
 	}
 
+	/**
+	 * Delete user by id
+	 * @param id	{@link Integer}
+	 * @return 		{@link ResultMessage}
+	 */
 	@Override
-	public ResultMessage delete(User user) {
+	public ResultMessage delete(Integer id) {
 		ResultMessage message = null;
+		User user = dao.get(id);
 		try{
 			dao.delete(user);
 			message = new ResultMessage(ResultMessage.Type.SUCCESS, ResultMessage.Msg.OK.toString());
@@ -61,7 +84,13 @@ public class UserService implements ServiceInterface<User>{
 		}
 		return message;
 	}
-
+	
+	/**
+	 * Get many with named query and params
+	 * @param queryName {@link String}
+	 * @param params	Map<String, Object>
+	 * @return			{@link ResultMessage}
+	 */
 	@Override
 	public ResultMessage getMany(String queryName, Map<String, Object> params) {
 		Collection<User> users = dao.getMany(queryName, params);
@@ -72,6 +101,11 @@ public class UserService implements ServiceInterface<User>{
 		}
 	}
 
+	/**
+	 * Get many with named query
+	 * @param queryName {@link String}
+	 * @return			{@link ResultMessage}
+	 */
 	@Override
 	public ResultMessage getMany(String queryName) {
 		Collection<User> users = dao.getMany(queryName);
@@ -82,19 +116,40 @@ public class UserService implements ServiceInterface<User>{
 		}
 	}
 
+	/**
+	 * Deactivate user by id
+	 * @param id	{@link Integer}
+	 * @return		{@link ResultMessage}
+	 */
 	@Override
-	public ResultMessage deactivate(User user) {
+	public ResultMessage deactivate(Integer id) {
+		User user = dao.get(id);
 		user.setActiveInd("Y");
 		return this.save(user);
 	}
 
+	/**
+	 * Activate user by id
+	 * @param id	{@link Integer}
+	 * @return		{@link ResultMessage}
+	 */
 	@Override
-	public ResultMessage activate(User user) {
+	public ResultMessage activate(Integer id) {
+		User user = dao.get(id);
 		user.setActiveInd("N");
 		return this.save(user);
 	}
 
-	
-	
-	
+	/**
+	 * Sets active (if null) and activity date/time
+	 * @param user	{@link User}
+	 * @return		{@link User}
+	 */
+	private User setDefaults(User user){
+		if(user.getActiveInd() == null){
+			user.setActiveInd("Y");
+		}
+		user.setActivityDtTm(new Date());
+		return user;
+	}
 }

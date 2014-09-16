@@ -11,7 +11,9 @@ public interface ControllerInterface <T> {
 	
 	public ResponseEntity<ResultMessage> save(T t, BindingResult bindingResult);
 	
-	public ResponseEntity<ResultMessage> update(T t, BindingResult bindingResult);
-	
 	public ResponseEntity<ResultMessage> delete(Integer id);
+	
+	public ResponseEntity<ResultMessage> activate(Integer id);
+	
+	public ResponseEntity<ResultMessage> deactivate(Integer id);
 }

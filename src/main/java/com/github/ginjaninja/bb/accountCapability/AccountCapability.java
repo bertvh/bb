@@ -1,5 +1,5 @@
-/** Capabilities a role has **/
-package com.github.ginjaninja.bb.account.capability;
+/** Capabilities assigned to accounts **/
+package com.github.ginjaninja.bb.accountCapability;
 
 import java.util.Date;
 
@@ -7,27 +7,28 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import com.github.ginjaninja.bb.account.account.Account;
+import com.github.ginjaninja.bb.account.capability.Capability;
+
 @Entity
-@Table(name="acct_capability")
-public class Capability {
-	public static enum Type {
-		ACCOUNT, ROLE;
-	}
-	
+@Table(name="acct_account_capability")
+public class AccountCapability {
 	@Id
     @GeneratedValue
     @Column(name = "id")
 	private Integer id;
 	
-	/** Capability name **/
-	@Column(name = "name", length = 30, nullable = false)
-    private String name;
+	@ManyToOne
+	@JoinColumn(name = "capability_id")
+	private Capability capability;
 	
-	/** Type of capability, chosen from enums above **/
-	@Column(name = "type", length = 10, nullable = false)
-	private Type type;
+	@ManyToOne
+	@JoinColumn(name = "account_id")
+	private Account account;
 	
 	/** Whether entity is active or not (can be put in trash without deleting permanently) */
     @Column(name = "active_ind", length = 1, nullable = false)
@@ -40,9 +41,9 @@ public class Capability {
     /** Date/Time created **/
     @Column(name = "created_dt_tm", nullable = false) 
     private Date createdDtTm;
+    
+    
 
-    
-    
 	public Integer getId() {
 		return id;
 	}
@@ -51,20 +52,20 @@ public class Capability {
 		this.id = id;
 	}
 
-	public String getName() {
-		return name;
+	public Capability getCapability() {
+		return capability;
 	}
 
-	public void setName(String name) {
-		this.name = name;
+	public void setCapability(Capability capability) {
+		this.capability = capability;
 	}
 
-	public Type getType() {
-		return type;
+	public Account getAccount() {
+		return account;
 	}
 
-	public void setType(Type type) {
-		this.type = type;
+	public void setAccount(Account account) {
+		this.account = account;
 	}
 
 	public String getActiveInd() {
@@ -90,6 +91,7 @@ public class Capability {
 	public void setCreatedDtTm(Date createdDtTm) {
 		this.createdDtTm = createdDtTm;
 	}
+    
     
     
 }

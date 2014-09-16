@@ -43,7 +43,7 @@ public class Account extends DomainObject{
     private Date createdDtTm;
 
     /** All users in account **/
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "account", cascade = CascadeType.ALL)
     private Collection<User> users = new ArrayList<User>();
     
     

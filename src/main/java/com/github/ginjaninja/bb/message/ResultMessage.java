@@ -19,7 +19,8 @@ public class ResultMessage {
 	public static enum Msg {
 		OK("OK"), 
 		UNKNOWN_ERROR("Unknown error occurred"),
-		NOT_FOUND("Entity with id not found");
+		NOT_FOUND("Entity with id not found"),
+		BAD_JSON("Poorly formed JSON object");
 		
 		private String value;
 		private Msg(String value){
