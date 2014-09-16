@@ -11,7 +11,7 @@ import javax.persistence.Query;
  * Generic DAO to handle basic CRUD operations 
  * @author CH137762
  *
- * @param <T>
+ * @param <T>	Entity Class to persist
  */
 public abstract class GenericDAOImpl <T>{
 

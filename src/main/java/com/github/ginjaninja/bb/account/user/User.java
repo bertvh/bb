@@ -1,7 +1,7 @@
 /**
  * Application users
  */
-package com.github.ginjaninja.bb.user;
+package com.github.ginjaninja.bb.account.user;
 
 import java.util.Date;
 
@@ -9,6 +9,8 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import com.github.ginjaninja.bb.domain.DomainObject;
@@ -20,6 +22,11 @@ public class User extends DomainObject {
     @GeneratedValue
     @Column(name = "id")
 	private Integer id;
+	
+	/** Account user belongs to **/
+	@ManyToOne
+	@JoinColumn(name = "account_id")
+	private Integer accountId;
 	
 	/** User's first name **/
 	@Column(name = "first_name", length = 30, nullable = false)
@@ -61,6 +68,14 @@ public class User extends DomainObject {
 
 	public void setId(Integer id) {
 		this.id = id;
+	}
+
+	public Integer getAccountId() {
+		return accountId;
+	}
+
+	public void setAccountId(Integer accountId) {
+		this.accountId = accountId;
 	}
 
 	public String getFirstName() {

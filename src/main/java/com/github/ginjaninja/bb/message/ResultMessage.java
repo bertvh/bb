@@ -6,13 +6,30 @@ package com.github.ginjaninja.bb.message;
  *
  */
 public class ResultMessage {
+	/**
+	 * Types of messages
+	 */
 	public static enum Type {
         ERROR, WARNING, INFO, SUCCESS;
 	}
 	
+	/**
+	 * Some message presets
+	 */
+	public static enum Msg {
+		OK("OK"), 
+		UNKNOWN_ERROR("Unknown error occurred"),
+		NOT_FOUND("Entity with id not found");
+		
+		private String value;
+		private Msg(String value){
+			this.value = value;
+		}
+	}
+	
 	private String text;
-	private final Type type;
-	private final Object result;
+	private Type type;
+	private Object result;
 	
 	/**
 	 * Construct message without result object;
@@ -37,6 +54,10 @@ public class ResultMessage {
 		this.type = type;
 		this.text = text;
 		this.result = result;
+	}
+
+	public ResultMessage() {
+		
 	}
 
 	public String getText() {

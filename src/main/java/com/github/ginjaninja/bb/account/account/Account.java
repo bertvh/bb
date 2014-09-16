@@ -1,16 +1,21 @@
 /**
  * Accounts are logical groups of users
  */
-package com.github.ginjaninja.bb.account;
+package com.github.ginjaninja.bb.account.account;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import com.github.ginjaninja.bb.account.user.User;
 import com.github.ginjaninja.bb.domain.DomainObject;
 
 @Entity
@@ -37,6 +42,12 @@ public class Account extends DomainObject{
     @Column(name = "created_dt_tm", nullable = false) 
     private Date createdDtTm;
 
+    /** All users in account **/
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private Collection<User> users = new ArrayList<User>();
+    
+    
+    
     
     
 	public Integer getId() {
