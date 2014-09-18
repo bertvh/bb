@@ -1,13 +1,3 @@
-create table acct_user (
-	id INT,
-	first_name VARCHAR(50),
-	last_name VARCHAR(50),
-	user_name VARCHAR(50),
-	email VARCHAR(50),
-	active_ind VARCHAR(50),
-	created_dt_tm DATE,
-	activity_dt_tm DATE
-);
 insert into acct_user (id, first_name, last_name, user_name, email, active_ind, created_dt_tm, activity_dt_tm) values (1, 'Linda', 'Morgan', 'lmorgan0', 'lmorgan0@usatoday.com', 'Y', '2013-10-11 16:39:12', '2014-09-12 09:52:19');
 insert into acct_user (id, first_name, last_name, user_name, email, active_ind, created_dt_tm, activity_dt_tm) values (2, 'Carlos', 'Flores', 'cflores1', 'cflores1@va.gov', 'Y', '2013-11-04 04:58:50', '2014-09-09 07:09:04');
 insert into acct_user (id, first_name, last_name, user_name, email, active_ind, created_dt_tm, activity_dt_tm) values (3, 'Samuel', 'Alexander', 'salexander2', 'salexander2@cbsnews.com', 'Y', '2014-08-25 21:02:26', '2014-09-03 00:15:27');

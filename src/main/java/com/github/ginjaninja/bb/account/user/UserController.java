@@ -60,7 +60,7 @@ public class UserController extends ControllerExceptionHandler implements Contro
 			status = HttpStatus.BAD_REQUEST;
 		}else{
 		    message = userService.save(user);
-	        if(message.getText().equals(ResultMessage.Type.ERROR)){
+	        if(message.getType().equals(ResultMessage.Type.ERROR)){
 	            status = HttpStatus.UNPROCESSABLE_ENTITY;
 	        }else{
 	            status = HttpStatus.OK;

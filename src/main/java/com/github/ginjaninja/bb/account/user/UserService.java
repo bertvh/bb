@@ -6,6 +6,8 @@ import java.util.Map;
 
 import javax.persistence.PersistenceException;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,6 +18,7 @@ import com.github.ginjaninja.bb.service.ServiceInterface;
 @Service
 @Transactional
 public class UserService implements ServiceInterface<User>{
+	final static Logger LOG = LoggerFactory.getLogger("UserService");
 	
 	@Autowired
 	private UserDAO dao;
@@ -49,18 +52,23 @@ public class UserService implements ServiceInterface<User>{
 		ResultMessage message = null;
 		this.setDefaults(user);
 		try{
-			if(user.getId() != null){
+			if(user.getId() == null){
 				user = dao.save(user);
 			}else{
 				//set createDtTm from existing record
-				user.setCreatedDtTm(dao.get(user.getId()).getCreatedDtTm());
+				User storedUser = dao.get(user.getId());
+				if(storedUser == null){
+					throw new IllegalArgumentException("No user exists with that id");
+				}
+				user.fillFields(dao);
+				user.setCreatedDtTm(storedUser.getCreatedDtTm());
 				user = dao.update(user);
 			}
 			message = new ResultMessage(ResultMessage.Type.SUCCESS, ResultMessage.Msg.OK.toString(), user);
 		}catch(PersistenceException pe){
-			message = new ResultMessage(ResultMessage.Type.ERROR, pe.getLocalizedMessage());
+			message = new ResultMessage(ResultMessage.Type.ERROR, pe.getMessage());
 		}catch(Exception e){
-			message = new ResultMessage(ResultMessage.Type.ERROR, e.getLocalizedMessage());
+			message = new ResultMessage(ResultMessage.Type.ERROR, e.getMessage());
 		}
 		return message;
 	}
@@ -150,6 +158,11 @@ public class UserService implements ServiceInterface<User>{
 			user.setActiveInd("Y");
 		}
 		user.setActivityDtTm(new Date());
+		return user;
+	}
+	
+	private User fill(User user){
+		
 		return user;
 	}
 }

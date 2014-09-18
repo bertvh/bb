@@ -1,11 +1,10 @@
 package com.github.ginjaninja.bb.account.user;
 
 import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.*;
+import static org.junit.Assert.fail;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -31,7 +30,7 @@ public class UserControllerTest extends WebAppConfigurationAware {
 	}
 
 	@Test
-	public void testGetNullEntity() throws Exception{
+	public void testGetNonExistentEntity() throws Exception{
 		MvcResult result = mockMvc.perform(get("/user/133"))
 			.andDo(print())
 			.andExpect(status().isUnprocessableEntity())
@@ -52,6 +51,14 @@ public class UserControllerTest extends WebAppConfigurationAware {
 		System.out.println(result.getResponse().getContentAsString());
 	}
 	
+	@Test
+	public void testGetNoId() throws Exception{
+		MvcResult result = mockMvc.perform(get("/user/"))
+			.andDo(print())
+			.andExpect(status().isOk())
+		    .andReturn();
+		System.out.println(result.getResponse().getContentAsString());
+	}
 
 	@Test
 	public void testSave() throws JsonProcessingException, Exception {
@@ -110,6 +117,24 @@ public class UserControllerTest extends WebAppConfigurationAware {
 	}
 	
 	@Test
+	public void testUpdateMissingProperty() throws JsonProcessingException, Exception {
+		ObjectMapper mapper = new ObjectMapper();
+		ObjectNode userJSON = mapper.createObjectNode();
+		userJSON.put("id", "1");
+		userJSON.put("firstName", "Old James");
+		
+		MvcResult result = mockMvc.perform(post("/user")
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(mapper.writeValueAsBytes(userJSON)))
+			.andDo(print())
+			.andExpect(status().isOk())
+			.andExpect(jsonPath("$.type", is("SUCCESS")))
+		    .andReturn();
+		
+		System.out.println(result.getResponse().getContentAsString());
+	}
+	
+	@Test
 	public void testUpdateNonExistentUser() throws JsonProcessingException, Exception {
 		ObjectMapper mapper = new ObjectMapper();
 		ObjectNode userJSON = mapper.createObjectNode();
@@ -120,8 +145,9 @@ public class UserControllerTest extends WebAppConfigurationAware {
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(mapper.writeValueAsBytes(userJSON)))
 			.andDo(print())
-			.andExpect(status().isOk())
-			.andExpect(jsonPath("$.type", is("SUCCESS")))
+			.andExpect(status().isUnprocessableEntity())
+			.andExpect(jsonPath("$.type", is("ERROR")))
+			.andExpect(jsonPath("$.text", is("No user exists with that id")))
 		    .andReturn();
 		
 		System.out.println(result.getResponse().getContentAsString());
