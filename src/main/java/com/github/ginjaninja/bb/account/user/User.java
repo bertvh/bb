@@ -119,27 +119,5 @@ public class User extends DomainObject {
 		this.lastName = lastName;
 	}
 
-	public String getActiveInd() {
-		return activeInd;
-	}
 
-	public void setActiveInd(String activeInd) {
-		this.activeInd = activeInd;
-	}
-
-	public Date getActivityDtTm() {
-		return activityDtTm;
-	}
-
-	public void setActivityDtTm(Date activityDtTm) {
-		this.activityDtTm = activityDtTm;
-	}
-
-	public Date getCreatedDtTm() {
-		return createdDtTm;
-	}
-
-	public void setCreatedDtTm(Date createdDtTm) {
-		this.createdDtTm = createdDtTm;
-	}
 }
