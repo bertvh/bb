@@ -2,6 +2,7 @@ package com.github.ginjaninja.bb.domain;
 
 import static org.junit.Assert.*;
 
+import org.hamcrest.CoreMatchers;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -16,7 +17,7 @@ public class DomainObjectTest extends WebAppConfigurationAware {
 	@Test
 	public void testFillFields() throws NoSuchFieldException, SecurityException, IllegalArgumentException, ReflectiveOperationException {
 		User user = new User();
-		user.setId(1);
+		user.setId(16);
 		user.setFirstName("Billy Bob");
 		
 		user.fillFields(dao);
@@ -26,4 +27,28 @@ public class DomainObjectTest extends WebAppConfigurationAware {
 		assertNotNull(user.getLastName());
 	}
 
+	@Test
+	public void testCheckRequiredSuccess() throws IllegalArgumentException, IllegalAccessException{
+		User user = new User();
+		user.setFirstName("Billy Bob");
+		user.setLastName("Roland");
+		user.setEmail("shashaus");
+		user.setPassword("LLL");
+		user.setUserName("LLLL");
+		user.fillFields();
+		
+		assertTrue(user.checkRequired().length() == 0);
+	}
+	
+	@Test
+	public void testCheckRequiredFail() throws IllegalArgumentException, IllegalAccessException{
+		User user = new User();
+		user.setFirstName("Billy Bob");
+		user.setLastName("Roland");
+		user.fillFields();
+		
+		String result = user.checkRequired();
+		System.out.println(result);
+		assertThat(result, CoreMatchers.containsString("The following required properties are missing:"));
+	}
 }

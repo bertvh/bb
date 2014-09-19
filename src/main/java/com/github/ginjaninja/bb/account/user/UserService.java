@@ -38,7 +38,7 @@ public class UserService implements ServiceInterface<User>{
 		if(user != null){
 			return new ResultMessage(ResultMessage.Type.SUCCESS, ResultMessage.Msg.OK.toString(), user);
 		}else{
-			return new ResultMessage(ResultMessage.Type.ERROR, ResultMessage.Msg.NOT_FOUND.toString());
+			return new ResultMessage(ResultMessage.Type.ERROR, ResultMessage.Msg.valueOf("NOT_FOUND").toString());
 		}
 	}
 
@@ -53,15 +53,19 @@ public class UserService implements ServiceInterface<User>{
 		this.setDefaults(user);
 		try{
 			if(user.getId() == null){
+				//set defaults
+				user.fillFields();
 				user = dao.save(user);
 			}else{
-				//set createDtTm from existing record
+				//get stored user
 				User storedUser = dao.get(user.getId());
 				if(storedUser == null){
 					throw new IllegalArgumentException("No user exists with that id");
 				}
+				//fill in null fields from stored object
 				user.fillFields(dao);
-				user.setCreatedDtTm(storedUser.getCreatedDtTm());
+				//update activity date time
+				user.setActivityDtTm(new Date());
 				user = dao.update(user);
 			}
 			message = new ResultMessage(ResultMessage.Type.SUCCESS, ResultMessage.Msg.OK.toString(), user);
@@ -82,13 +86,17 @@ public class UserService implements ServiceInterface<User>{
 	public ResultMessage delete(Integer id) {
 		ResultMessage message = null;
 		User user = dao.get(id);
-		try{
-			dao.delete(user);
-			message = new ResultMessage(ResultMessage.Type.SUCCESS, ResultMessage.Msg.OK.toString());
-		}catch(PersistenceException pe){
-			message = new ResultMessage(ResultMessage.Type.ERROR, pe.getLocalizedMessage());
-		}catch(Exception e){
-			message = new ResultMessage(ResultMessage.Type.ERROR, e.getLocalizedMessage());
+		if(user == null){
+			message = new ResultMessage(ResultMessage.Type.ERROR, "User not found. Could not delete user.");
+		}else{
+			try{
+				dao.delete(user);
+				message = new ResultMessage(ResultMessage.Type.SUCCESS, ResultMessage.Msg.OK.toString());
+			}catch(PersistenceException pe){
+				message = new ResultMessage(ResultMessage.Type.ERROR, pe.getLocalizedMessage());
+			}catch(Exception e){
+				message = new ResultMessage(ResultMessage.Type.ERROR, e.getLocalizedMessage());
+			}
 		}
 		return message;
 	}
@@ -132,7 +140,7 @@ public class UserService implements ServiceInterface<User>{
 	@Override
 	public ResultMessage deactivate(Integer id) {
 		User user = dao.get(id);
-		user.setActiveInd("Y");
+		user.setActiveInd("N");
 		return this.save(user);
 	}
 
@@ -144,7 +152,7 @@ public class UserService implements ServiceInterface<User>{
 	@Override
 	public ResultMessage activate(Integer id) {
 		User user = dao.get(id);
-		user.setActiveInd("N");
+		user.setActiveInd("Y");
 		return this.save(user);
 	}
 
@@ -161,8 +169,5 @@ public class UserService implements ServiceInterface<User>{
 		return user;
 	}
 	
-	private User fill(User user){
-		
-		return user;
-	}
+	
 }

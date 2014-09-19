@@ -18,13 +18,20 @@ public class ResultMessage {
 	 */
 	public static enum Msg {
 		OK("OK"), 
-		UNKNOWN_ERROR("Unknown error occurred"),
-		NOT_FOUND("Entity with id not found"),
-		BAD_JSON("Poorly formed JSON object");
+		UNKNOWN_ERROR("Unknown error occurred."),
+		NOT_FOUND("Entity with id not found."),
+		BAD_JSON("Poorly formed JSON object."),
+		TYPE_MISMATCH("Type mismatch. Please check your request."),
+		MISSING_PROPERTIES("Missing required properties.");
 		
-		private String value;
-		private Msg(String value){
-			this.value = value;
+		private String message;
+		private Msg(String message){
+			this.message = message;
+		}
+		
+		@Override
+		public String toString(){
+			return this.message;
 		}
 	}
 	

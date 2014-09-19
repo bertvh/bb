@@ -1,7 +1,6 @@
 package com.github.ginjaninja.bb.account.user;
 
 import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.fail;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -25,6 +24,7 @@ public class UserControllerTest extends WebAppConfigurationAware {
 		MvcResult result = mockMvc.perform(get("/user/1"))
 			.andDo(print())
 			.andExpect(status().isOk())
+			.andExpect(jsonPath("$.type", is("SUCCESS")))
 		    .andReturn();
 		System.out.println(result.getResponse().getContentAsString());
 	}
@@ -35,7 +35,7 @@ public class UserControllerTest extends WebAppConfigurationAware {
 			.andDo(print())
 			.andExpect(status().isUnprocessableEntity())
 			.andExpect(jsonPath("$.type", is("ERROR")))
-			.andExpect(jsonPath("$.text", is("User not found.")))
+			.andExpect(jsonPath("$.text", is("Entity with id not found.")))
 		    .andReturn();
 		System.out.println(result.getResponse().getContentAsString());
 	}
@@ -55,7 +55,9 @@ public class UserControllerTest extends WebAppConfigurationAware {
 	public void testGetNoId() throws Exception{
 		MvcResult result = mockMvc.perform(get("/user/"))
 			.andDo(print())
-			.andExpect(status().isOk())
+			.andExpect(status().isUnprocessableEntity())
+			.andExpect(jsonPath("$.type", is("ERROR")))
+			.andExpect(jsonPath("$.text", is("Missing id or parameters to fetch.")))
 		    .andReturn();
 		System.out.println(result.getResponse().getContentAsString());
 	}
@@ -66,19 +68,42 @@ public class UserControllerTest extends WebAppConfigurationAware {
 		ObjectNode userJSON = mapper.createObjectNode();
 		userJSON.put("firstName", "Another James");
 		userJSON.put("lastName", "Brown");
-		userJSON.put("activeInd", "Y");
+		userJSON.put("email", "brown@email.com");
+		userJSON.put("password", "booya");
+		userJSON.put("userName", "ajbrown");
 		
 		MvcResult result = mockMvc.perform(post("/user")
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(mapper.writeValueAsBytes(userJSON)))
 			.andDo(print())
 			.andExpect(status().isOk())
+			.andExpect(jsonPath("$.type", is("SUCCESS")))
+			.andExpect(jsonPath("$.text", is("OK")))
+			.andExpect(jsonPath("$.result[*].firstName", is("Another James")))
+		    .andReturn();
+		System.out.println(result.getResponse().getContentAsString());
+	}
+
+	@Test
+	public void testSaveMissingProperty() throws JsonProcessingException, Exception {
+		ObjectMapper mapper = new ObjectMapper();
+		ObjectNode userJSON = mapper.createObjectNode();
+		userJSON.put("firstName", "Another James");
+		userJSON.put("lastName", "Brown");
+		
+		MvcResult result = mockMvc.perform(post("/user")
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(mapper.writeValueAsBytes(userJSON)))
+			.andDo(print())
+			.andExpect(status().isOk())
+			.andExpect(jsonPath("$.type", is("SUCCESS")))
+			.andExpect(jsonPath("$.text", is("OK")))
+			.andExpect(jsonPath("$.result[*].firstName", is("Another James")))
 		    .andReturn();
 		
 		System.out.println(result.getResponse().getContentAsString());
-		
 	}
-
+	
 	@Test
 	public void testSaveBadContentType() throws JsonProcessingException, Exception {
 		ObjectMapper mapper = new ObjectMapper();
@@ -155,9 +180,10 @@ public class UserControllerTest extends WebAppConfigurationAware {
 	
 	@Test
 	public void testDelete() throws JsonProcessingException, Exception {
-		MvcResult result = mockMvc.perform(delete("/user/3"))
+		MvcResult result = mockMvc.perform(delete("/user/5"))
 			.andDo(print())
 			.andExpect(status().isOk())
+			.andExpect(jsonPath("$.type", is("SUCCESS")))
 		    .andReturn();
 		
 		System.out.println(result.getResponse().getContentAsString());
@@ -168,9 +194,9 @@ public class UserControllerTest extends WebAppConfigurationAware {
 	public void testDeleteNonExistentUser() throws JsonProcessingException, Exception {
 		MvcResult result = mockMvc.perform(delete("/user/256"))
 			.andDo(print())
-			.andExpect(status().isNotFound())
+			.andExpect(status().isUnprocessableEntity())
 			.andExpect(jsonPath("$.type", is("ERROR")))
-			.andExpect(jsonPath("$.text", is("user not found. Could not delete user.")))
+			.andExpect(jsonPath("$.text", is("User not found. Could not delete user.")))
 		    .andReturn();
 		
 		System.out.println(result.getResponse().getContentAsString());
@@ -178,13 +204,25 @@ public class UserControllerTest extends WebAppConfigurationAware {
 	}
 
 	@Test
-	public void testActivate() {
-		fail("Not yet implemented");
+	public void testActivate() throws JsonProcessingException, Exception {
+		MvcResult result = mockMvc.perform(post("/user/activate/18"))
+				.andDo(print())
+				.andExpect(status().isOk())
+				.andExpect(jsonPath("$.type", is("SUCCESS")))
+				.andExpect(jsonPath("$.result[*].activeInd", is("Y")))
+			    .andReturn();
+		System.out.println(result.getResponse().getContentAsString());
 	}
 
 	@Test
-	public void testDeactivate() {
-		fail("Not yet implemented");
+	public void testDeactivate() throws JsonProcessingException, Exception {
+		MvcResult result = mockMvc.perform(post("/user/deactivate/19"))
+				.andDo(print())
+				.andExpect(status().isOk())
+				.andExpect(jsonPath("$.type", is("SUCCESS")))
+				.andExpect(jsonPath("$.result[*].activeInd", is("N")))
+			    .andReturn();
+		System.out.println(result.getResponse().getContentAsString());
 	}
 
 }

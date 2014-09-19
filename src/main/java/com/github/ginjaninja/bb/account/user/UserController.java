@@ -24,6 +24,16 @@ public class UserController extends ControllerExceptionHandler implements Contro
 	private ServiceInterface<User> userService;
 	
 	/**
+	 * Unimplemented get
+	 */
+	@RequestMapping(value="/", method = RequestMethod.GET)
+	@ResponseBody
+	public ResponseEntity<ResultMessage> get(){
+		return new ResponseEntity<ResultMessage>(new ResultMessage(ResultMessage.Type.ERROR, "Missing id or parameters to fetch."), 
+				HttpStatus.UNPROCESSABLE_ENTITY);
+	}
+	
+	/**
 	 * Get user by id
 	 * @param 	id {@link Integer}
 	 * @return 	ResponseEntity<ResultMessage>(message, status)
@@ -81,7 +91,7 @@ public class UserController extends ControllerExceptionHandler implements Contro
 		HttpStatus status;
 		ResultMessage message = userService.delete(id);
 		if(message.getType().equals(ResultMessage.Type.ERROR)){
-			status = HttpStatus.NOT_FOUND;
+			status = HttpStatus.UNPROCESSABLE_ENTITY;
 		}else{
 			status = HttpStatus.OK;
 		}
@@ -96,7 +106,7 @@ public class UserController extends ControllerExceptionHandler implements Contro
 	@Override
 	@RequestMapping(value="/activate/{id}", method = RequestMethod.POST)
 	@ResponseBody
-	public ResponseEntity<ResultMessage> activate(Integer id) {
+	public ResponseEntity<ResultMessage> activate(@PathVariable Integer id) {
 		HttpStatus status;
 		ResultMessage message = userService.activate(id);
 		if(message.getType().equals(ResultMessage.Type.ERROR)){
@@ -115,7 +125,7 @@ public class UserController extends ControllerExceptionHandler implements Contro
 	@Override
 	@RequestMapping(value="/deactivate/{id}", method = RequestMethod.POST)
 	@ResponseBody
-	public ResponseEntity<ResultMessage> deactivate(Integer id) {
+	public ResponseEntity<ResultMessage> deactivate(@PathVariable Integer id) {
 		HttpStatus status;
 		ResultMessage message = userService.deactivate(id);
 		if(message.getType().equals(ResultMessage.Type.ERROR)){
@@ -125,7 +135,9 @@ public class UserController extends ControllerExceptionHandler implements Contro
 		}
 		return new ResponseEntity<ResultMessage>(message, status);
 	}
-
+	
+	
+	
 
 
 }

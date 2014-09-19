@@ -30,7 +30,7 @@ public abstract class ControllerExceptionHandler {
 		ex.printStackTrace(new PrintWriter(errors));
 		LOG.error(errors.toString());
 		
-		ResultMessage message = new ResultMessage(ResultMessage.Type.ERROR, "Type mismatch. Please check your request.");
+		ResultMessage message = new ResultMessage(ResultMessage.Type.ERROR, ResultMessage.Msg.TYPE_MISMATCH.toString());
 		return new ResponseEntity<ResultMessage>(message, HttpStatus.NOT_FOUND);
 	}
 	
@@ -43,7 +43,7 @@ public abstract class ControllerExceptionHandler {
 		ex.printStackTrace(new PrintWriter(errors));
 		LOG.error(errors.toString());
 		
-		ResultMessage message = new ResultMessage(ResultMessage.Type.ERROR, "Cannot update or delete entity that is not in database.");
+		ResultMessage message = new ResultMessage(ResultMessage.Type.ERROR, ResultMessage.Msg.NOT_FOUND.toString());
 		return new ResponseEntity<ResultMessage>(message, HttpStatus.NOT_FOUND);
 	}
 
