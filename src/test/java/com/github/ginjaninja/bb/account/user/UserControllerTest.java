@@ -88,17 +88,17 @@ public class UserControllerTest extends WebAppConfigurationAware {
 	public void testSaveMissingProperty() throws JsonProcessingException, Exception {
 		ObjectMapper mapper = new ObjectMapper();
 		ObjectNode userJSON = mapper.createObjectNode();
-		userJSON.put("firstName", "Another James");
+		userJSON.put("firstName", "Boo James");
 		userJSON.put("lastName", "Brown");
 		
 		MvcResult result = mockMvc.perform(post("/user")
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(mapper.writeValueAsBytes(userJSON)))
 			.andDo(print())
-			.andExpect(status().isOk())
-			.andExpect(jsonPath("$.type", is("SUCCESS")))
-			.andExpect(jsonPath("$.text", is("OK")))
-			.andExpect(jsonPath("$.result[*].firstName", is("Another James")))
+			.andExpect(status().isUnprocessableEntity())
+			.andExpect(jsonPath("$.type", is("ERROR")))
+			.andExpect(jsonPath("$.text", is("Missing required properties.")))
+			.andExpect(jsonPath("$.result", is("The following required properties are missing: class java.lang.String: userName, class java.lang.String: email, class java.lang.String: password, ")))
 		    .andReturn();
 		
 		System.out.println(result.getResponse().getContentAsString());
@@ -142,24 +142,6 @@ public class UserControllerTest extends WebAppConfigurationAware {
 	}
 	
 	@Test
-	public void testUpdateMissingProperty() throws JsonProcessingException, Exception {
-		ObjectMapper mapper = new ObjectMapper();
-		ObjectNode userJSON = mapper.createObjectNode();
-		userJSON.put("id", "1");
-		userJSON.put("firstName", "Old James");
-		
-		MvcResult result = mockMvc.perform(post("/user")
-				.contentType(MediaType.APPLICATION_JSON)
-				.content(mapper.writeValueAsBytes(userJSON)))
-			.andDo(print())
-			.andExpect(status().isOk())
-			.andExpect(jsonPath("$.type", is("SUCCESS")))
-		    .andReturn();
-		
-		System.out.println(result.getResponse().getContentAsString());
-	}
-	
-	@Test
 	public void testUpdateNonExistentUser() throws JsonProcessingException, Exception {
 		ObjectMapper mapper = new ObjectMapper();
 		ObjectNode userJSON = mapper.createObjectNode();
@@ -172,7 +154,7 @@ public class UserControllerTest extends WebAppConfigurationAware {
 			.andDo(print())
 			.andExpect(status().isUnprocessableEntity())
 			.andExpect(jsonPath("$.type", is("ERROR")))
-			.andExpect(jsonPath("$.text", is("No user exists with that id")))
+			.andExpect(jsonPath("$.text", is("Entity with id not found.")))
 		    .andReturn();
 		
 		System.out.println(result.getResponse().getContentAsString());

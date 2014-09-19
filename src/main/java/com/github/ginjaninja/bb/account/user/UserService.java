@@ -50,25 +50,32 @@ public class UserService implements ServiceInterface<User>{
 	@Override
 	public ResultMessage save(User user) {
 		ResultMessage message = null;
-		this.setDefaults(user);
 		try{
 			if(user.getId() == null){
 				//set defaults
 				user.fillFields();
-				user = dao.save(user);
+				String result = user.checkRequired();
+				//save if checkRequired message is empty
+				if(result.length() == 0){
+					user = dao.save(user);
+					message = new ResultMessage(ResultMessage.Type.SUCCESS, ResultMessage.Msg.OK.toString(), user);
+				}else{
+					//return error with missing properties
+					message = new ResultMessage(ResultMessage.Type.ERROR, ResultMessage.Msg.MISSING_PROPERTIES.toString(), result);
+				}
 			}else{
 				//get stored user
 				User storedUser = dao.get(user.getId());
 				if(storedUser == null){
-					throw new IllegalArgumentException("No user exists with that id");
+					throw new IllegalArgumentException(ResultMessage.Msg.NOT_FOUND.toString());
 				}
 				//fill in null fields from stored object
 				user.fillFields(dao);
 				//update activity date time
 				user.setActivityDtTm(new Date());
 				user = dao.update(user);
+				message = new ResultMessage(ResultMessage.Type.SUCCESS, ResultMessage.Msg.OK.toString(), user);
 			}
-			message = new ResultMessage(ResultMessage.Type.SUCCESS, ResultMessage.Msg.OK.toString(), user);
 		}catch(PersistenceException pe){
 			message = new ResultMessage(ResultMessage.Type.ERROR, pe.getMessage());
 		}catch(Exception e){
@@ -156,18 +163,5 @@ public class UserService implements ServiceInterface<User>{
 		return this.save(user);
 	}
 
-	/**
-	 * Sets active (if null) and activity date/time
-	 * @param user	{@link User}
-	 * @return		{@link User}
-	 */
-	private User setDefaults(User user){
-		if(user.getActiveInd() == null){
-			user.setActiveInd("Y");
-		}
-		user.setActivityDtTm(new Date());
-		return user;
-	}
-	
 	
 }

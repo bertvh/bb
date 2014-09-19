@@ -6,6 +6,7 @@ import java.util.Date;
 import javax.persistence.Column;
 
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.springframework.aop.ThrowsAdvice;
 
 import com.github.ginjaninja.bb.dao.GenericDAOImpl;
 
@@ -56,6 +57,11 @@ public abstract class DomainObject {
 	/**
 	 * Uses reflection to set not nullable members (as defined by @Column) 
 	 * from stored object (with same id) when updating object
+	 * @param dao {@link GenericDAOImpl} autowired dao
+	 * @throws NoSuchFieldException
+	 * @throws {@link SecurityException}
+	 * @throws IllegalArgumentException
+	 * @throws {@link ReflectiveOperationException}
 	 */
 	@SuppressWarnings("rawtypes")
 	public void fillFields(GenericDAOImpl dao) throws NoSuchFieldException, SecurityException, IllegalArgumentException, ReflectiveOperationException{
@@ -104,7 +110,7 @@ public abstract class DomainObject {
 	 * @throws IllegalArgumentException 
 	 */
 	public String checkRequired() throws IllegalArgumentException, IllegalAccessException{
-		StringBuilder fieldString = new StringBuilder("The following required properties are missing:");
+		StringBuilder fieldString = new StringBuilder("The following required properties are missing: ");
 		boolean missing = false;
 		//for each field in object
 		for(Field field : this.getClass().getDeclaredFields()){
@@ -117,7 +123,6 @@ public abstract class DomainObject {
 				//if @column annotation exists and field is not nullable
 				if(columnAnnotation != null && !columnAnnotation.nullable()){
 					missing = true;
-					fieldString.append(" ");
 					fieldString.append(field.getType());
 					fieldString.append(": ");
 					fieldString.append(field.getName());
