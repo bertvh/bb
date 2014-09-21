@@ -58,6 +58,39 @@ public class Account extends DomainObject{
 		this.name = name;
 	}
 
+	@Override
+    public void setId(Integer id){
+    	this.id = id;
+    }
+    @Override
+    public Integer getId(){
+    	return id;
+    }
+    
+	@Override
+	public String getActiveInd() {
+		return activeInd;
+	}
+	@Override
+	public void setActiveInd(String activeInd) {
+		this.activeInd = activeInd;
+	}
+	@Override
+	public Date getCreatedDtTm() {
+		return createdDtTm;
+	}
+	@Override
+	public void setCreatedDtTm(Date createdDtTm) {
+		this.createdDtTm = createdDtTm;
+	}
+	@Override
+	public Date getActivityDtTm() {
+		return activityDtTm;
+	}
+	@Override
+	public void setActivityDtTm(Date activityDtTm) {
+		this.activityDtTm = activityDtTm;
+	}
 	
 	
 }

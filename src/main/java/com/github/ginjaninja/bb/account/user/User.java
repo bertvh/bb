@@ -61,14 +61,7 @@ public class User extends DomainObject {
     @Column(name = "created_dt_tm", nullable = false) 
     private Date createdDtTm;
     
-    @Override
-    public void setId(Integer id){
-    	this.id = id;
-    }
-    @Override
-    public Integer getId(){
-    	return id;
-    }
+    
     
 	public Account getAccount() {
 		return account;
@@ -117,6 +110,16 @@ public class User extends DomainObject {
 	public void setLastName(String lastName) {
 		this.lastName = lastName;
 	}
+	
+	@Override
+    public void setId(Integer id){
+    	this.id = id;
+    }
+    @Override
+    public Integer getId(){
+    	return id;
+    }
+    
 	@Override
 	public String getActiveInd() {
 		return activeInd;
