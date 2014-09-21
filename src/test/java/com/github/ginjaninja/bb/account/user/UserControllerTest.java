@@ -178,7 +178,7 @@ public class UserControllerTest extends WebAppConfigurationAware {
 			.andDo(print())
 			.andExpect(status().isUnprocessableEntity())
 			.andExpect(jsonPath("$.type", is("ERROR")))
-			.andExpect(jsonPath("$.text", is("User not found. Could not delete user.")))
+			.andExpect(jsonPath("$.text", is("Entity with id not found.")))
 		    .andReturn();
 		
 		System.out.println(result.getResponse().getContentAsString());

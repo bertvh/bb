@@ -29,23 +29,23 @@ public class UserService implements ServiceInterface<User>{
 
 	/**
 	 * Get user by id
-	 * @param 	id {@link Integer}
-	 * @return 	{@link ResultMessage}
+	 * @param 	id 	{@link Integer}
+	 * @return 		{@link ResultMessage}
 	 */
 	@Override
 	public ResultMessage get(Integer id) {
 		User user = dao.get(id);
 		if(user != null){
-			return new ResultMessage(ResultMessage.Type.SUCCESS, ResultMessage.Msg.OK.toString(), user);
+			return ResultMessage.success(user);
 		}else{
-			return new ResultMessage(ResultMessage.Type.ERROR, ResultMessage.Msg.valueOf("NOT_FOUND").toString());
+			return ResultMessage.notFound();
 		}
 	}
 
 	/**
 	 * Save user 
-	 * @param user {@link User}
-	 * @return {@link ResultMessage}
+	 * @param user 	{@link User}
+	 * @return 		{@link ResultMessage}
 	 */
 	@Override
 	public ResultMessage save(User user) {
@@ -58,23 +58,24 @@ public class UserService implements ServiceInterface<User>{
 				//save if checkRequired message is empty
 				if(result.length() == 0){
 					user = dao.save(user);
-					message = new ResultMessage(ResultMessage.Type.SUCCESS, ResultMessage.Msg.OK.toString(), user);
+					message = ResultMessage.success(user);
 				}else{
 					//return error with missing properties
-					message = new ResultMessage(ResultMessage.Type.ERROR, ResultMessage.Msg.MISSING_PROPERTIES.toString(), result);
+					message = ResultMessage.missingProperties(result);
 				}
 			}else{
 				//get stored user
 				User storedUser = dao.get(user.getId());
 				if(storedUser == null){
-					throw new IllegalArgumentException(ResultMessage.Msg.NOT_FOUND.toString());
+					message = ResultMessage.notFound();
+				}else{
+					//fill in null fields from stored object
+					user.fillFields(dao);
+					//update activity date time
+					user.setActivityDtTm(new Date());
+					user = dao.update(user);
+					message = ResultMessage.success(user);
 				}
-				//fill in null fields from stored object
-				user.fillFields(dao);
-				//update activity date time
-				user.setActivityDtTm(new Date());
-				user = dao.update(user);
-				message = new ResultMessage(ResultMessage.Type.SUCCESS, ResultMessage.Msg.OK.toString(), user);
 			}
 		}catch(PersistenceException pe){
 			message = new ResultMessage(ResultMessage.Type.ERROR, pe.getMessage());
@@ -94,15 +95,15 @@ public class UserService implements ServiceInterface<User>{
 		ResultMessage message = null;
 		User user = dao.get(id);
 		if(user == null){
-			message = new ResultMessage(ResultMessage.Type.ERROR, "User not found. Could not delete user.");
+			message = ResultMessage.notFound();
 		}else{
 			try{
 				dao.delete(user);
-				message = new ResultMessage(ResultMessage.Type.SUCCESS, ResultMessage.Msg.OK.toString());
+				message = ResultMessage.success(user);
 			}catch(PersistenceException pe){
-				message = new ResultMessage(ResultMessage.Type.ERROR, pe.getLocalizedMessage());
+				message = new ResultMessage(ResultMessage.Type.ERROR, pe.getMessage());
 			}catch(Exception e){
-				message = new ResultMessage(ResultMessage.Type.ERROR, e.getLocalizedMessage());
+				message = new ResultMessage(ResultMessage.Type.ERROR, e.getMessage());
 			}
 		}
 		return message;
@@ -118,9 +119,9 @@ public class UserService implements ServiceInterface<User>{
 	public ResultMessage getMany(String queryName, Map<String, Object> params) {
 		Collection<User> users = dao.getMany(queryName, params);
 		if(users != null){
-			return new ResultMessage(ResultMessage.Type.SUCCESS, ResultMessage.Msg.OK.toString(), users);
+			return ResultMessage.success(users);
 		}else{
-			return new ResultMessage(ResultMessage.Type.ERROR, ResultMessage.Msg.NOT_FOUND.toString());
+			return ResultMessage.notFound();
 		}
 	}
 
@@ -133,9 +134,9 @@ public class UserService implements ServiceInterface<User>{
 	public ResultMessage getMany(String queryName) {
 		Collection<User> users = dao.getMany(queryName);
 		if(users != null){
-			return new ResultMessage(ResultMessage.Type.SUCCESS, ResultMessage.Msg.OK.toString(), users);
+			return ResultMessage.success(users);
 		}else{
-			return new ResultMessage(ResultMessage.Type.ERROR, ResultMessage.Msg.NOT_FOUND.toString());
+			return ResultMessage.notFound();
 		}
 	}
 

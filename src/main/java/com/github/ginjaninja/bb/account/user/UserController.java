@@ -23,6 +23,7 @@ public class UserController extends ControllerExceptionHandler implements Contro
 	@Autowired
 	private ServiceInterface<User> userService;
 	
+	
 	/**
 	 * Unimplemented get
 	 */

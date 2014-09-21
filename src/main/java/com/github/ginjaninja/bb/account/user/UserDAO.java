@@ -4,11 +4,11 @@ package com.github.ginjaninja.bb.account.user;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.github.ginjaninja.bb.dao.GenericDAOImpl;
+import com.github.ginjaninja.bb.dao.GenericDAO;
 
 @Repository
 @Transactional
-public class UserDAO extends GenericDAOImpl<User> {
+public class UserDAO extends GenericDAO<User> {
 
 	public UserDAO() {
 		super(User.class);

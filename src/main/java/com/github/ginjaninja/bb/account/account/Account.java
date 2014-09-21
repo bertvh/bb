@@ -49,14 +49,6 @@ public class Account extends DomainObject{
     
     
     
-    
-	public Integer getId() {
-		return id;
-	}
-
-	public void setId(Integer id) {
-		this.id = id;
-	}
 
 	public String getName() {
 		return name;
@@ -65,31 +57,6 @@ public class Account extends DomainObject{
 	public void setName(String name) {
 		this.name = name;
 	}
-
-	public String getActiveInd() {
-		return activeInd;
-	}
-
-	public void setActiveInd(String activeInd) {
-		this.activeInd = activeInd;
-	}
-
-	public Date getActivityDtTm() {
-		return activityDtTm;
-	}
-
-	public void setActivityDtTm(Date activityDtTm) {
-		this.activityDtTm = activityDtTm;
-	}
-
-	public Date getCreatedDtTm() {
-		return createdDtTm;
-	}
-
-	public void setCreatedDtTm(Date createdDtTm) {
-		this.createdDtTm = createdDtTm;
-	}
-	
 
 	
 	

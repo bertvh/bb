@@ -41,9 +41,9 @@ public class ResultMessage {
 	
 	/**
 	 * Construct message without result object;
-	 * @param type Type
-	 * @param text String
-	 * @return Message 
+	 * @param type 	{@link Type} enum
+	 * @param text 	{@link String} message text
+	 * @return 		{@link ResultMessage}
 	 */
 	public ResultMessage(Type type, String text){
 		this.type = type;
@@ -53,10 +53,10 @@ public class ResultMessage {
 	
 	/**
      * Construct message with result object;
-     * @param type Type
-     * @param text String
-     * @param result Object
-     * @return Message 
+     * @param type 		{@link Type} enum
+     * @param text 		{@link String} message text
+     * @param result	{@link Object} result object
+     * @return 			{@link ResultMessage} 
      */
 	public ResultMessage(Type type, String text, Object result){
 		this.type = type;
@@ -64,6 +64,32 @@ public class ResultMessage {
 		this.result = result;
 	}
 
+	/**
+	 * Return Success message when transaction completed successfully
+	 * @param o	{@link Object} 
+	 * @return	{@link ResultMessage}
+	 */
+	public static ResultMessage success(Object o){
+		return new ResultMessage(ResultMessage.Type.SUCCESS, ResultMessage.Msg.OK.toString(), o);
+	}
+	
+	/**
+	 * Return entity Not Found message (used when cannot locate entity with id for update/fetch/delete)
+	 * @return	{@link ResultMessage}
+	 */
+	public static ResultMessage notFound(){
+		return new ResultMessage(ResultMessage.Type.ERROR, ResultMessage.Msg.valueOf("NOT_FOUND").toString());
+	}
+	
+	/**
+	 * Return Missing Properties message (used for save/update)
+	 * @param propertyString	{@link String} of missing properties
+	 * @return					{@link ResultMessage}
+	 */
+	public static ResultMessage missingProperties(String propertyString){
+		return new ResultMessage(ResultMessage.Type.ERROR, ResultMessage.Msg.MISSING_PROPERTIES.toString(), propertyString);
+	}
+	
 	public ResultMessage() {
 		
 	}

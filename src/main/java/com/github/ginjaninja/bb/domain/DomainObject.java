@@ -6,9 +6,8 @@ import java.util.Date;
 import javax.persistence.Column;
 
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
-import org.springframework.aop.ThrowsAdvice;
 
-import com.github.ginjaninja.bb.dao.GenericDAOImpl;
+import com.github.ginjaninja.bb.dao.GenericDAO;
 
 public abstract class DomainObject {
 	
@@ -57,19 +56,21 @@ public abstract class DomainObject {
 	/**
 	 * Uses reflection to set not nullable members (as defined by @Column) 
 	 * from stored object (with same id) when updating object
-	 * @param dao {@link GenericDAOImpl} autowired dao
+	 * @param dao {@link GenericDAO} autowired dao
 	 * @throws NoSuchFieldException
 	 * @throws {@link SecurityException}
 	 * @throws IllegalArgumentException
 	 * @throws {@link ReflectiveOperationException}
 	 */
 	@SuppressWarnings("rawtypes")
-	public void fillFields(GenericDAOImpl dao) throws NoSuchFieldException, SecurityException, IllegalArgumentException, ReflectiveOperationException{
+	public void fillFields(GenericDAO dao) throws NoSuchFieldException, SecurityException, IllegalArgumentException, ReflectiveOperationException{
+		System.out.println(this.toString());
 		Object o = dao.get(this.getId());
 		//for each field in object
 		for(Field field : this.getClass().getDeclaredFields()){
 			//make private field accessible
 			field.setAccessible(true);
+			System.out.println(field.getName() +": " + field.get(this));
 			//if value field in this is null
 			if(field.get(this) == null){
 				//get @column annotation
@@ -118,10 +119,12 @@ public abstract class DomainObject {
 			field.setAccessible(true);
 			//if value field in this is null
 			if(field.get(this) == null){
+				System.out.println(field.getName() +": " + field.get(this));
 				//get @column annotation
 				Column columnAnnotation = field.getAnnotation(Column.class);
 				//if @column annotation exists and field is not nullable
 				if(columnAnnotation != null && !columnAnnotation.nullable()){
+					
 					missing = true;
 					fieldString.append(field.getType());
 					fieldString.append(": ");

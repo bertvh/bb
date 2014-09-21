@@ -13,7 +13,7 @@ import javax.persistence.Query;
  *
  * @param <T>	Entity Class to persist
  */
-public abstract class GenericDAOImpl <T>{
+public abstract class GenericDAO <T>{
 
 	protected Class<T> entityClass;
 	
@@ -24,7 +24,7 @@ public abstract class GenericDAOImpl <T>{
 	 * Set entity class
 	 */
 	@SuppressWarnings({ "rawtypes", "unchecked" })
-	public GenericDAOImpl(Class entityClass){
+	public GenericDAO(Class entityClass){
 		this.entityClass = entityClass;
 	}
 	

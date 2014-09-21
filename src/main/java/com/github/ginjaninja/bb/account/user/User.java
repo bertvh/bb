@@ -60,17 +60,16 @@ public class User extends DomainObject {
     /** Date/Time created **/
     @Column(name = "created_dt_tm", nullable = false) 
     private Date createdDtTm;
-
     
+    @Override
+    public void setId(Integer id){
+    	this.id = id;
+    }
+    @Override
+    public Integer getId(){
+    	return id;
+    }
     
-	public Integer getId() {
-		return id;
-	}
-
-	public void setId(Integer id) {
-		this.id = id;
-	}
-
 	public Account getAccount() {
 		return account;
 	}
@@ -118,6 +117,28 @@ public class User extends DomainObject {
 	public void setLastName(String lastName) {
 		this.lastName = lastName;
 	}
-
-
+	@Override
+	public String getActiveInd() {
+		return activeInd;
+	}
+	@Override
+	public void setActiveInd(String activeInd) {
+		this.activeInd = activeInd;
+	}
+	@Override
+	public Date getCreatedDtTm() {
+		return createdDtTm;
+	}
+	@Override
+	public void setCreatedDtTm(Date createdDtTm) {
+		this.createdDtTm = createdDtTm;
+	}
+	@Override
+	public Date getActivityDtTm() {
+		return activityDtTm;
+	}
+	@Override
+	public void setActivityDtTm(Date activityDtTm) {
+		this.activityDtTm = activityDtTm;
+	}
 }

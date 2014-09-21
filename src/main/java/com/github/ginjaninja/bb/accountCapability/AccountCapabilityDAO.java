@@ -4,11 +4,11 @@ package com.github.ginjaninja.bb.accountCapability;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.github.ginjaninja.bb.dao.GenericDAOImpl;
+import com.github.ginjaninja.bb.dao.GenericDAO;
 
 @Repository
 @Transactional
-public class AccountCapabilityDAO extends GenericDAOImpl<AccountCapability> {
+public class AccountCapabilityDAO extends GenericDAO<AccountCapability> {
 
 	public AccountCapabilityDAO() {
 		super(AccountCapability.class);
