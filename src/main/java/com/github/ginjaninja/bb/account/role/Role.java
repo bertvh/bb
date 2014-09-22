@@ -3,14 +3,19 @@
  */
 package com.github.ginjaninja.bb.account.role;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import com.github.ginjaninja.bb.account.userRole.UserRole;
 import com.github.ginjaninja.bb.domain.DomainObject;
 
 @Entity
@@ -37,6 +42,8 @@ public class Role extends DomainObject{
     @Column(name = "created_dt_tm", nullable = false) 
     private Date createdDtTm;
 
+    @OneToMany(mappedBy = "role", cascade = CascadeType.ALL)
+    private Collection<UserRole> userRoles = new ArrayList<UserRole>();
     
     
     
