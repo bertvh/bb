@@ -23,9 +23,7 @@ public class UserService implements ServiceInterface<User>{
 	@Autowired
 	private UserDAO dao;
 	
-	public UserService(){
-		
-	}
+	
 
 	/**
 	 * Get user by id

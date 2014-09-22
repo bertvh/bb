@@ -12,11 +12,15 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import com.github.ginjaninja.bb.account.user.User;
 import com.github.ginjaninja.bb.domain.DomainObject;
+
+
 
 @Entity
 @Table(name="acct_account")
@@ -49,6 +53,14 @@ public class Account extends DomainObject{
     
     
     
+
+	public Collection<User> getUsers() {
+		return users;
+	}
+
+	public void setUsers(Collection<User> users) {
+		this.users = users;
+	}
 
 	public String getName() {
 		return name;
