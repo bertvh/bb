@@ -71,7 +71,9 @@ public class UserService implements ServiceInterface<User>{
 					user.fillFields(dao);
 					//update activity date time
 					user.setActivityDtTm(new Date());
-					user = dao.update(user);
+					dao.update(user);
+					//refetch user with parent/child entities
+					user = dao.get(user.getId());
 					message = ResultMessage.success(user);
 				}
 			}
