@@ -13,11 +13,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.github.ginjaninja.bb.message.ResultMessage;
-import com.github.ginjaninja.bb.service.ServiceInterface;
 
 @Service
 @Transactional
-public class UserRoleService implements ServiceInterface<UserRole>{
+public class UserRoleService {
 	final static Logger LOG = LoggerFactory.getLogger("UserRoleService");
 	
 	@Autowired
@@ -30,7 +29,6 @@ public class UserRoleService implements ServiceInterface<UserRole>{
 	 * @param 	id 	{@link Integer}
 	 * @return 		{@link ResultMessage}
 	 */
-	@Override
 	public ResultMessage get(Integer id) {
 		UserRole userRole = dao.get(id);
 		if(userRole != null){
@@ -45,7 +43,6 @@ public class UserRoleService implements ServiceInterface<UserRole>{
 	 * @param userRole 	{@link UserRole}
 	 * @return 		{@link ResultMessage}
 	 */
-	@Override
 	public ResultMessage save(UserRole userRole) {
 		ResultMessage message = null;
 		try{
@@ -90,7 +87,6 @@ public class UserRoleService implements ServiceInterface<UserRole>{
 	 * @param id	{@link Integer}
 	 * @return 		{@link ResultMessage}
 	 */
-	@Override
 	public ResultMessage delete(Integer id) {
 		ResultMessage message = null;
 		UserRole userRole = dao.get(id);
@@ -115,7 +111,6 @@ public class UserRoleService implements ServiceInterface<UserRole>{
 	 * @param params	Map<String, Object>
 	 * @return			{@link ResultMessage}
 	 */
-	@Override
 	public ResultMessage getMany(String queryName, Map<String, Object> params) {
 		Collection<UserRole> userRoles = dao.getMany(queryName, params);
 		if(userRoles != null){
@@ -130,7 +125,6 @@ public class UserRoleService implements ServiceInterface<UserRole>{
 	 * @param queryName {@link String}
 	 * @return			{@link ResultMessage}
 	 */
-	@Override
 	public ResultMessage getMany(String queryName) {
 		Collection<UserRole> userRoles = dao.getMany(queryName);
 		if(userRoles != null){
@@ -145,7 +139,6 @@ public class UserRoleService implements ServiceInterface<UserRole>{
 	 * @param id	{@link Integer}
 	 * @return		{@link ResultMessage}
 	 */
-	@Override
 	public ResultMessage deactivate(Integer id) {
 		UserRole userRole = dao.get(id);
 		userRole.setActiveInd("N");
@@ -157,7 +150,6 @@ public class UserRoleService implements ServiceInterface<UserRole>{
 	 * @param id	{@link Integer}
 	 * @return		{@link ResultMessage}
 	 */
-	@Override
 	public ResultMessage activate(Integer id) {
 		UserRole userRole = dao.get(id);
 		userRole.setActiveInd("Y");

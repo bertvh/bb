@@ -15,7 +15,7 @@ public class DomainObjectTest extends WebAppConfigurationAware {
 	private UserDAO dao;
 	
 	@Test
-	public void testFillFieldsDAO() throws NoSuchFieldException, SecurityException, IllegalArgumentException, ReflectiveOperationException {
+	public void testFillFieldsDAO() {
 		User user = new User();
 		user.setId(16);
 		user.setFirstName("Jack Bob");
@@ -41,7 +41,7 @@ public class DomainObjectTest extends WebAppConfigurationAware {
 	}
 	
 	@Test
-	public void testCheckRequiredSuccess() throws IllegalArgumentException, IllegalAccessException{
+	public void testCheckRequiredSuccess() {
 		User user = new User();
 		user.setFirstName("Billy Bob");
 		user.setLastName("Roland");
@@ -54,7 +54,7 @@ public class DomainObjectTest extends WebAppConfigurationAware {
 	}
 	
 	@Test
-	public void testCheckRequiredFail() throws IllegalArgumentException, IllegalAccessException{
+	public void testCheckRequiredFail() {
 		User user = new User();
 		user.setFirstName("Billy Bob");
 		user.setLastName("Roland");

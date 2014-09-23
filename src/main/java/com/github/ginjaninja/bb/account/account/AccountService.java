@@ -10,14 +10,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.github.ginjaninja.bb.account.account.Account;
-import com.github.ginjaninja.bb.account.account.Account;
 import com.github.ginjaninja.bb.message.ResultMessage;
-import com.github.ginjaninja.bb.service.ServiceInterface;
 
 @Service
 @Transactional
-public class AccountService implements ServiceInterface<Account>{
+public class AccountService {
 	@Autowired
 	private AccountDAO dao;
 	
@@ -26,7 +23,6 @@ public class AccountService implements ServiceInterface<Account>{
 	 * @param 	id 	{@link Integer}
 	 * @return 		{@link ResultMessage}
 	 */
-	@Override
 	public ResultMessage get(Integer id) {
 		Account account = dao.get(id);
 		if(account != null){
@@ -41,7 +37,6 @@ public class AccountService implements ServiceInterface<Account>{
 	 * @param account 	{@link Account}
 	 * @return 			{@link ResultMessage}
 	 */
-	@Override
 	public ResultMessage save(Account account) {
 		ResultMessage message = null;
 		try{
@@ -84,7 +79,6 @@ public class AccountService implements ServiceInterface<Account>{
 	 * @param id	{@link Integer}
 	 * @return 		{@link ResultMessage}
 	 */
-	@Override
 	public ResultMessage delete(Integer id) {
 		ResultMessage message = null;
 		Account account = dao.get(id);
@@ -109,7 +103,6 @@ public class AccountService implements ServiceInterface<Account>{
 	 * @param params	Map<String, Object>
 	 * @return			{@link ResultMessage}
 	 */
-	@Override
 	public ResultMessage getMany(String queryName, Map<String, Object> params) {
 		Collection<Account> accounts = dao.getMany(queryName, params);
 		if(accounts != null){
@@ -124,7 +117,6 @@ public class AccountService implements ServiceInterface<Account>{
 	 * @param queryName {@link String}
 	 * @return			{@link ResultMessage}
 	 */
-	@Override
 	public ResultMessage getMany(String queryName) {
 		Collection<Account> accounts = dao.getMany(queryName);
 		if(accounts != null){
@@ -139,7 +131,6 @@ public class AccountService implements ServiceInterface<Account>{
 	 * @param id	{@link Integer}
 	 * @return		{@link ResultMessage}
 	 */
-	@Override
 	public ResultMessage deactivate(Integer id) {
 		Account account = dao.get(id);
 		account.setActiveInd("N");
@@ -151,7 +142,6 @@ public class AccountService implements ServiceInterface<Account>{
 	 * @param id	{@link Integer}
 	 * @return		{@link ResultMessage}
 	 */
-	@Override
 	public ResultMessage activate(Integer id) {
 		Account account = dao.get(id);
 		account.setActiveInd("Y");

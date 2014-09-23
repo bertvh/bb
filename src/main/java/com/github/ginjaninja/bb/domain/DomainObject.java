@@ -57,17 +57,16 @@ public abstract class DomainObject {
 	public String toString(){
 		return ReflectionToStringBuilder.toString(this);
 	}
+	
 	/**
 	 * Uses reflection to set not nullable members (as defined by @Column) 
 	 * from stored object (with same id) when updating object
 	 * @param dao {@link GenericDAO} autowired dao
-	 * @throws NoSuchFieldException
-	 * @throws {@link SecurityException}
-	 * @throws IllegalArgumentException
-	 * @throws {@link ReflectiveOperationException}
+	 * @param dao
 	 */
 	@SuppressWarnings("rawtypes")
 	public void fillFields(GenericDAO dao) {
+		//Object o = dao.get(this.getId());
 		Object o = dao.get(this.getId());
 		//for each field in object
 		for(Field field : this.getClass().getDeclaredFields()){
@@ -153,21 +152,5 @@ public abstract class DomainObject {
 		return fieldString.toString();
 	}
 	
-	/**
-	 * Check whether field is null and has a not nullable column annotation
-	 * @param f	Field to check
-	 * @return	boolean if field is null or not
-	 */
-	private boolean isNull(Field f){
-		boolean bool = false;
-		if(f == null){
-			//get @column annotation
-			Column columnAnnotation = f.getAnnotation(Column.class);
-			//if @column annotation exists and field is not nullable
-			if(columnAnnotation != null && !columnAnnotation.nullable()){
-				bool = true;
-			}
-		}
-		return bool;
-	}
+	
 }

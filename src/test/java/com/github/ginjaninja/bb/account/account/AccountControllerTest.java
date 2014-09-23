@@ -121,7 +121,7 @@ public class AccountControllerTest extends WebAppConfigurationAware {
 	public void testUpdate() throws JsonProcessingException, Exception {
 		ObjectMapper mapper = new ObjectMapper();
 		ObjectNode accountJSON = mapper.createObjectNode();
-		accountJSON.put("id", "1");
+		accountJSON.put("id", "6");
 		accountJSON.put("name", "Old Yeller, Inc.");
 		
 		MvcResult result = mockMvc.perform(post("/account")

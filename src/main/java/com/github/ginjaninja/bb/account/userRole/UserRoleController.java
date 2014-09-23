@@ -15,14 +15,12 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.github.ginjaninja.bb.controller.ControllerExceptionHandler;
 import com.github.ginjaninja.bb.controller.ControllerInterface;
 import com.github.ginjaninja.bb.message.ResultMessage;
-import com.github.ginjaninja.bb.service.ServiceInterface;
 
 @Controller
 @RequestMapping(value={"userRole"})
 public class UserRoleController extends ControllerExceptionHandler implements ControllerInterface<UserRole>{
 	@Autowired
-	private ServiceInterface<UserRole> userRoleService;
-	
+	private UserRoleService userRoleService;
 	
 	/**
 	 * Unimplemented get

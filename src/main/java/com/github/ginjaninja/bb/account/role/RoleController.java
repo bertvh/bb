@@ -15,14 +15,13 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.github.ginjaninja.bb.controller.ControllerExceptionHandler;
 import com.github.ginjaninja.bb.controller.ControllerInterface;
 import com.github.ginjaninja.bb.message.ResultMessage;
-import com.github.ginjaninja.bb.service.ServiceInterface;
 
 @Controller
 @RequestMapping(value={"role"})
 public class RoleController extends ControllerExceptionHandler implements ControllerInterface<Role>{
 	@Autowired
-	private ServiceInterface<Role> roleService;
-
+	private RoleService roleService;
+	
 	/**
 	 * Unimplemented get
 	 */

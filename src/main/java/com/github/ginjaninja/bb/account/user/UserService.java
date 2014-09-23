@@ -16,11 +16,10 @@ import org.springframework.transaction.annotation.Transactional;
 import com.github.ginjaninja.bb.account.account.Account;
 import com.github.ginjaninja.bb.account.account.AccountDAO;
 import com.github.ginjaninja.bb.message.ResultMessage;
-import com.github.ginjaninja.bb.service.ServiceInterface;
 
 @Service
 @Transactional
-public class UserService implements ServiceInterface<User>{
+public class UserService {
 	final static Logger LOG = LoggerFactory.getLogger("UserService");
 	
 	@Autowired
@@ -34,7 +33,6 @@ public class UserService implements ServiceInterface<User>{
 	 * @param 	id 	{@link Integer}
 	 * @return 		{@link ResultMessage}
 	 */
-	@Override
 	public ResultMessage get(Integer id) {
 		User user = dao.get(id);
 		UserDTO userDTO = new UserDTO();
@@ -51,7 +49,6 @@ public class UserService implements ServiceInterface<User>{
 	 * @param user 	{@link User}
 	 * @return 		{@link ResultMessage}
 	 */
-	@Override
 	public ResultMessage save(User user) {
 		ResultMessage message = null;
 		try{
@@ -100,7 +97,6 @@ public class UserService implements ServiceInterface<User>{
 	 * @param id	{@link Integer}
 	 * @return 		{@link ResultMessage}
 	 */
-	@Override
 	public ResultMessage delete(Integer id) {
 		ResultMessage message = null;
 		User user = dao.get(id);
@@ -125,7 +121,6 @@ public class UserService implements ServiceInterface<User>{
 	 * @param params	Map<String, Object>
 	 * @return			{@link ResultMessage}
 	 */
-	@Override
 	public ResultMessage getMany(String queryName, Map<String, Object> params) {
 		Collection<User> users = dao.getMany(queryName, params);
 		Collection<UserDTO> dtoUsers = new ArrayList<UserDTO>();
@@ -148,7 +143,6 @@ public class UserService implements ServiceInterface<User>{
 	 * @param queryName {@link String}
 	 * @return			{@link ResultMessage}
 	 */
-	@Override
 	public ResultMessage getMany(String queryName) {
 		Collection<User> users = dao.getMany(queryName);
 		Collection<UserDTO> dtoUsers = new ArrayList<UserDTO>();
@@ -171,7 +165,6 @@ public class UserService implements ServiceInterface<User>{
 	 * @param id	{@link Integer}
 	 * @return		{@link ResultMessage}
 	 */
-	@Override
 	public ResultMessage deactivate(Integer id) {
 		User user = dao.get(id);
 		user.setActiveInd("N");
@@ -183,7 +176,6 @@ public class UserService implements ServiceInterface<User>{
 	 * @param id	{@link Integer}
 	 * @return		{@link ResultMessage}
 	 */
-	@Override
 	public ResultMessage activate(Integer id) {
 		User user = dao.get(id);
 		user.setActiveInd("Y");
@@ -197,19 +189,21 @@ public class UserService implements ServiceInterface<User>{
 	 * @return				{@link ResultMessage}
 	 */
 	public ResultMessage add(Integer userId, Integer accountId){
-		ResultMessage message = ResultMessage.success();
+		ResultMessage message;
 		
 		User user = dao.get(userId);
 		Account acct = acctDao.get(accountId);
 		if(user == null){
+			message = ResultMessage.notFound();
 			message.setText("Can't add user to account. User not found.");
 		}else if(acct == null){
+			message = ResultMessage.notFound();
 			message.setText("Can't add user to account. Account not found.");
 		}else{
 			user.setAccount(acct);
 			message = this.save(user);
 		}
-		message.setResult(acct);
+		message.setResult(user);
 		return message;
 	}
 	

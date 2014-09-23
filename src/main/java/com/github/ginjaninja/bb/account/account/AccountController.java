@@ -10,22 +10,17 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.github.ginjaninja.bb.account.user.User;
 import com.github.ginjaninja.bb.controller.ControllerExceptionHandler;
 import com.github.ginjaninja.bb.controller.ControllerInterface;
 import com.github.ginjaninja.bb.message.ResultMessage;
-import com.github.ginjaninja.bb.service.ServiceInterface;
 
 @Controller
 @RequestMapping(value={"account"})
 public class AccountController extends ControllerExceptionHandler implements ControllerInterface<Account>{
 	@Autowired
-	private ServiceInterface<Account> accountService;
-	@Autowired
-	private ServiceInterface<User> userService;
+	private AccountService accountService;
 	
 	/**
 	 * Unimplemented get
