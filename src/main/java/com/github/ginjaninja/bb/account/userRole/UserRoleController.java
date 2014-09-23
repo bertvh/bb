@@ -1,4 +1,4 @@
-package com.github.ginjaninja.bb.account.user;
+package com.github.ginjaninja.bb.account.userRole;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -10,22 +10,19 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.github.ginjaninja.bb.account.account.Account;
 import com.github.ginjaninja.bb.controller.ControllerExceptionHandler;
 import com.github.ginjaninja.bb.controller.ControllerInterface;
 import com.github.ginjaninja.bb.message.ResultMessage;
 import com.github.ginjaninja.bb.service.ServiceInterface;
 
 @Controller
-@RequestMapping(value={"user"})
-public class UserController extends ControllerExceptionHandler implements ControllerInterface<User>{
+@RequestMapping(value={"userRole"})
+public class UserRoleController extends ControllerExceptionHandler implements ControllerInterface<UserRole>{
 	@Autowired
-	private ServiceInterface<User> userService;
-	@Autowired
-	private ServiceInterface<Account> accountService;
+	private ServiceInterface<UserRole> userRoleService;
+	
 	
 	/**
 	 * Unimplemented get
@@ -38,7 +35,7 @@ public class UserController extends ControllerExceptionHandler implements Contro
 	}
 	
 	/**
-	 * Get user by id
+	 * Get userRole by id
 	 * @param 	id {@link Integer}
 	 * @return 	ResponseEntity<ResultMessage>(message, status)
 	 */
@@ -47,7 +44,7 @@ public class UserController extends ControllerExceptionHandler implements Contro
 	@ResponseBody
 	public ResponseEntity<ResultMessage> get(@PathVariable Integer id) {
 		HttpStatus status;
-		ResultMessage message = userService.get(id);
+		ResultMessage message = userRoleService.get(id);
 		if(message.getType().equals(ResultMessage.Type.ERROR)){
 			status = HttpStatus.UNPROCESSABLE_ENTITY;
 		}else{
@@ -57,8 +54,8 @@ public class UserController extends ControllerExceptionHandler implements Contro
 	}
 
 	/**
-	 * Save user from json object
-	 * @param user {@link User}
+	 * Save userRole from json object
+	 * @param userRole {@link UserRole}
 	 * @return ResponseEntity<ResultMessage>(message, status)
 	 */
 	@Override
@@ -66,14 +63,14 @@ public class UserController extends ControllerExceptionHandler implements Contro
 			produces = MediaType.APPLICATION_JSON_VALUE, 
 			consumes = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody
-	public ResponseEntity<ResultMessage> save(@RequestBody final User user, BindingResult bindingResult) {
+	public ResponseEntity<ResultMessage> save(@RequestBody final UserRole userRole, BindingResult bindingResult) {
 		ResultMessage message;
 		HttpStatus status;
 		if(bindingResult.hasErrors()){
 			message = new ResultMessage(ResultMessage.Type.ERROR, ResultMessage.Msg.BAD_JSON.toString());
 			status = HttpStatus.BAD_REQUEST;
 		}else{
-		    message = userService.save(user);
+		    message = userRoleService.save(userRole);
 	        if(message.getType().equals(ResultMessage.Type.ERROR)){
 	            status = HttpStatus.UNPROCESSABLE_ENTITY;
 	        }else{
@@ -84,7 +81,7 @@ public class UserController extends ControllerExceptionHandler implements Contro
 	}
 
 	/**
-	 * Delete user by id
+	 * Delete userRole by id
 	 * @param id	{@link Integer}
 	 * @return ResponseEntity<ResultMessage>(message, status)
 	 */
@@ -93,7 +90,7 @@ public class UserController extends ControllerExceptionHandler implements Contro
 	@ResponseBody
 	public ResponseEntity<ResultMessage> delete(@PathVariable Integer id) {
 		HttpStatus status;
-		ResultMessage message = userService.delete(id);
+		ResultMessage message = userRoleService.delete(id);
 		if(message.getType().equals(ResultMessage.Type.ERROR)){
 			status = HttpStatus.UNPROCESSABLE_ENTITY;
 		}else{
@@ -103,7 +100,7 @@ public class UserController extends ControllerExceptionHandler implements Contro
 	}
 
 	/**
-	 * Activate user by id
+	 * Activate userRole by id
 	 * @param id	{@link Integer}
 	 * @return ResponseEntity<ResultMessage>(message, status)
 	 */
@@ -112,7 +109,7 @@ public class UserController extends ControllerExceptionHandler implements Contro
 	@ResponseBody
 	public ResponseEntity<ResultMessage> activate(@PathVariable Integer id) {
 		HttpStatus status;
-		ResultMessage message = userService.activate(id);
+		ResultMessage message = userRoleService.activate(id);
 		if(message.getType().equals(ResultMessage.Type.ERROR)){
 			status = HttpStatus.NOT_FOUND;
 		}else{
@@ -122,7 +119,7 @@ public class UserController extends ControllerExceptionHandler implements Contro
 	}
 
 	/**
-	 * Deactivate user by id
+	 * Deactivate userRole by id
 	 * @param id	{@link Integer}
 	 * @return ResponseEntity<ResultMessage>(message, status)
 	 */
@@ -131,7 +128,7 @@ public class UserController extends ControllerExceptionHandler implements Contro
 	@ResponseBody
 	public ResponseEntity<ResultMessage> deactivate(@PathVariable Integer id) {
 		HttpStatus status;
-		ResultMessage message = userService.deactivate(id);
+		ResultMessage message = userRoleService.deactivate(id);
 		if(message.getType().equals(ResultMessage.Type.ERROR)){
 			status = HttpStatus.NOT_FOUND;
 		}else{
@@ -141,7 +138,7 @@ public class UserController extends ControllerExceptionHandler implements Contro
 	}
 	
 	
-
+	
 
 
 }

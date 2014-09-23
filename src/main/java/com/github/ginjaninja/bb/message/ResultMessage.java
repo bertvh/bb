@@ -6,6 +6,10 @@ package com.github.ginjaninja.bb.message;
  *
  */
 public class ResultMessage {
+	public void setResult(Object result) {
+		this.result = result;
+	}
+
 	/**
 	 * Types of messages
 	 */
@@ -67,6 +71,14 @@ public class ResultMessage {
 
 	/**
 	 * Return Success message when transaction completed successfully
+	 * @return	{@link ResultMessage}
+	 */
+	public static ResultMessage success(){
+		return new ResultMessage(ResultMessage.Type.SUCCESS, ResultMessage.Msg.OK.toString());
+	}
+	
+	/**
+	 * Return Success message when transaction completed successfully
 	 * @param o	{@link Object} 
 	 * @return	{@link ResultMessage}
 	 */
@@ -110,5 +122,6 @@ public class ResultMessage {
 	public Object getResult() {
 		return result;
 	}
+
 	
 }

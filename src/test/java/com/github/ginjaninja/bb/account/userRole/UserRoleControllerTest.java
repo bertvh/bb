@@ -1,4 +1,4 @@
-package com.github.ginjaninja.bb.account.user;
+package com.github.ginjaninja.bb.account.userRole;
 
 import static org.hamcrest.Matchers.is;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
@@ -17,22 +17,22 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.github.ginjaninja.bb.config.WebAppConfigurationAware;
 
-public class UserControllerTest extends WebAppConfigurationAware {
+public class UserRoleControllerTest extends WebAppConfigurationAware {
 
 	@Test
 	public void testGet() throws Exception{
-		MvcResult result = mockMvc.perform(get("/user/1"))
+		MvcResult result = mockMvc.perform(get("/userRole/1"))
 			.andDo(print())
 			.andExpect(status().isOk())
 			.andExpect(jsonPath("$.type", is("SUCCESS")))
-			.andExpect(jsonPath("$.result[*].account[*].name", is("Centidel")))
+			.andExpect(jsonPath("$.result[*].role[*].name", is("admin")))
 		    .andReturn();
 		System.out.println(result.getResponse().getContentAsString());
 	}
 
 	@Test
 	public void testGetNonExistentEntity() throws Exception{
-		MvcResult result = mockMvc.perform(get("/user/133"))
+		MvcResult result = mockMvc.perform(get("/userRole/133"))
 			.andDo(print())
 			.andExpect(status().isUnprocessableEntity())
 			.andExpect(jsonPath("$.type", is("ERROR")))
@@ -43,7 +43,7 @@ public class UserControllerTest extends WebAppConfigurationAware {
 	
 	@Test
 	public void testGetBadId() throws Exception{
-		MvcResult result = mockMvc.perform(get("/user/abc"))
+		MvcResult result = mockMvc.perform(get("/userRole/abc"))
 			.andDo(print())
 			.andExpect(status().isNotFound())
 			.andExpect(jsonPath("$.type", is("ERROR")))
@@ -54,7 +54,7 @@ public class UserControllerTest extends WebAppConfigurationAware {
 	
 	@Test
 	public void testGetNoId() throws Exception{
-		MvcResult result = mockMvc.perform(get("/user/"))
+		MvcResult result = mockMvc.perform(get("/userRole/"))
 			.andDo(print())
 			.andExpect(status().isUnprocessableEntity())
 			.andExpect(jsonPath("$.type", is("ERROR")))
@@ -66,16 +66,16 @@ public class UserControllerTest extends WebAppConfigurationAware {
 	@Test
 	public void testSave() throws JsonProcessingException, Exception {
 		ObjectMapper mapper = new ObjectMapper();
-		ObjectNode userJSON = mapper.createObjectNode();
-		userJSON.put("firstName", "Another James");
-		userJSON.put("lastName", "Brown");
-		userJSON.put("email", "brown@email.com");
-		userJSON.put("password", "booya");
-		userJSON.put("userName", "ajbrown");
+		ObjectNode userRoleJSON = mapper.createObjectNode();
+		userRoleJSON.put("firstName", "Another James");
+		userRoleJSON.put("lastName", "Brown");
+		userRoleJSON.put("email", "brown@email.com");
+		userRoleJSON.put("password", "booya");
+		userRoleJSON.put("userRoleName", "ajbrown");
 		
-		MvcResult result = mockMvc.perform(post("/user")
+		MvcResult result = mockMvc.perform(post("/userRole")
 				.contentType(MediaType.APPLICATION_JSON)
-				.content(mapper.writeValueAsBytes(userJSON)))
+				.content(mapper.writeValueAsBytes(userRoleJSON)))
 			.andDo(print())
 			.andExpect(status().isOk())
 			.andExpect(jsonPath("$.type", is("SUCCESS")))
@@ -88,18 +88,18 @@ public class UserControllerTest extends WebAppConfigurationAware {
 	@Test
 	public void testSaveMissingProperty() throws JsonProcessingException, Exception {
 		ObjectMapper mapper = new ObjectMapper();
-		ObjectNode userJSON = mapper.createObjectNode();
-		userJSON.put("firstName", "Boo James");
-		userJSON.put("lastName", "Brown");
+		ObjectNode userRoleJSON = mapper.createObjectNode();
+		userRoleJSON.put("firstName", "Boo James");
+		userRoleJSON.put("lastName", "Brown");
 		
-		MvcResult result = mockMvc.perform(post("/user")
+		MvcResult result = mockMvc.perform(post("/userRole")
 				.contentType(MediaType.APPLICATION_JSON)
-				.content(mapper.writeValueAsBytes(userJSON)))
+				.content(mapper.writeValueAsBytes(userRoleJSON)))
 			.andDo(print())
 			.andExpect(status().isUnprocessableEntity())
 			.andExpect(jsonPath("$.type", is("ERROR")))
 			.andExpect(jsonPath("$.text", is("Missing required properties.")))
-			.andExpect(jsonPath("$.result", is("The following required properties are missing: class java.lang.String: userName, class java.lang.String: email, class java.lang.String: password, ")))
+			.andExpect(jsonPath("$.result", is("The following required properties are missing: class java.lang.String: userRoleName, class java.lang.String: email, class java.lang.String: password, ")))
 		    .andReturn();
 		
 		System.out.println(result.getResponse().getContentAsString());
@@ -108,14 +108,14 @@ public class UserControllerTest extends WebAppConfigurationAware {
 	@Test
 	public void testSaveBadContentType() throws JsonProcessingException, Exception {
 		ObjectMapper mapper = new ObjectMapper();
-		ObjectNode userJSON = mapper.createObjectNode();
-		userJSON.put("firstName", "Another James");
-		userJSON.put("lastName", "Brown");
-		userJSON.put("activeInd", "Y");
+		ObjectNode userRoleJSON = mapper.createObjectNode();
+		userRoleJSON.put("firstName", "Another James");
+		userRoleJSON.put("lastName", "Brown");
+		userRoleJSON.put("activeInd", "Y");
 		
-		MvcResult result = mockMvc.perform(post("/user")
+		MvcResult result = mockMvc.perform(post("/userRole")
 				.contentType(MediaType.APPLICATION_FORM_URLENCODED)
-				.content(mapper.writeValueAsBytes(userJSON)))
+				.content(mapper.writeValueAsBytes(userRoleJSON)))
 			.andDo(print())
 			.andExpect(status().isUnsupportedMediaType())
 		    .andReturn();
@@ -127,13 +127,13 @@ public class UserControllerTest extends WebAppConfigurationAware {
 	@Test
 	public void testUpdate() throws JsonProcessingException, Exception {
 		ObjectMapper mapper = new ObjectMapper();
-		ObjectNode userJSON = mapper.createObjectNode();
-		userJSON.put("id", "1");
-		userJSON.put("firstName", "Old James");
+		ObjectNode userRoleJSON = mapper.createObjectNode();
+		userRoleJSON.put("id", "1");
+		userRoleJSON.put("firstName", "Old James");
 		
-		MvcResult result = mockMvc.perform(post("/user")
+		MvcResult result = mockMvc.perform(post("/userRole")
 				.contentType(MediaType.APPLICATION_JSON)
-				.content(mapper.writeValueAsBytes(userJSON)))
+				.content(mapper.writeValueAsBytes(userRoleJSON)))
 			.andDo(print())
 			.andExpect(status().isOk())
 			.andExpect(jsonPath("$.type", is("SUCCESS")))
@@ -145,15 +145,15 @@ public class UserControllerTest extends WebAppConfigurationAware {
 	@Test
 	public void testUpdateAccount() throws JsonProcessingException, Exception {
 		ObjectMapper mapper = new ObjectMapper();
-		ObjectNode userJSON = mapper.createObjectNode();
-		userJSON.put("id", "12");
+		ObjectNode userRoleJSON = mapper.createObjectNode();
+		userRoleJSON.put("id", "12");
 		ObjectNode acctJSON = mapper.createObjectNode();
 		acctJSON.put("id", "7");
-		userJSON.put("account", acctJSON);
+		userRoleJSON.put("account", acctJSON);
 		
-		MvcResult result = mockMvc.perform(post("/user")
+		MvcResult result = mockMvc.perform(post("/userRole")
 				.contentType(MediaType.APPLICATION_JSON)
-				.content(mapper.writeValueAsBytes(userJSON)))
+				.content(mapper.writeValueAsBytes(userRoleJSON)))
 			.andDo(print())
 			.andExpect(status().isOk())
 			.andExpect(jsonPath("$.type", is("SUCCESS")))
@@ -164,29 +164,15 @@ public class UserControllerTest extends WebAppConfigurationAware {
 	}
 	
 	@Test
-	public void testAddAccount() throws JsonProcessingException, Exception {
-		
-		MvcResult result = mockMvc.perform(post("/user/account?user=12&account=1")
-				.contentType(MediaType.APPLICATION_JSON))
-			.andDo(print())
-			.andExpect(status().isOk())
-			.andExpect(jsonPath("$.type", is("SUCCESS")))
-			.andExpect(jsonPath("$.result[*].account[*].name", is("Centidel")))
-		    .andReturn();
-		
-		System.out.println(result.getResponse().getContentAsString());
-	}
-	
-	@Test
-	public void testUpdateNonExistentUser() throws JsonProcessingException, Exception {
+	public void testUpdateNonExistentUserRole() throws JsonProcessingException, Exception {
 		ObjectMapper mapper = new ObjectMapper();
-		ObjectNode userJSON = mapper.createObjectNode();
-		userJSON.put("id", "1333");
-		userJSON.put("firstName", "Old James");
+		ObjectNode userRoleJSON = mapper.createObjectNode();
+		userRoleJSON.put("id", "1333");
+		userRoleJSON.put("firstName", "Old James");
 		
-		MvcResult result = mockMvc.perform(post("/user")
+		MvcResult result = mockMvc.perform(post("/userRole")
 				.contentType(MediaType.APPLICATION_JSON)
-				.content(mapper.writeValueAsBytes(userJSON)))
+				.content(mapper.writeValueAsBytes(userRoleJSON)))
 			.andDo(print())
 			.andExpect(status().isUnprocessableEntity())
 			.andExpect(jsonPath("$.type", is("ERROR")))
@@ -198,7 +184,7 @@ public class UserControllerTest extends WebAppConfigurationAware {
 	
 	@Test
 	public void testDelete() throws JsonProcessingException, Exception {
-		MvcResult result = mockMvc.perform(delete("/user/6"))
+		MvcResult result = mockMvc.perform(delete("/userRole/6"))
 			.andDo(print())
 			.andExpect(status().isOk())
 			.andExpect(jsonPath("$.type", is("SUCCESS")))
@@ -209,8 +195,8 @@ public class UserControllerTest extends WebAppConfigurationAware {
 	}
 	
 	@Test
-	public void testDeleteNonExistentUser() throws JsonProcessingException, Exception {
-		MvcResult result = mockMvc.perform(delete("/user/256"))
+	public void testDeleteNonExistentUserRole() throws JsonProcessingException, Exception {
+		MvcResult result = mockMvc.perform(delete("/userRole/256"))
 			.andDo(print())
 			.andExpect(status().isUnprocessableEntity())
 			.andExpect(jsonPath("$.type", is("ERROR")))
@@ -223,7 +209,7 @@ public class UserControllerTest extends WebAppConfigurationAware {
 
 	@Test
 	public void testActivate() throws JsonProcessingException, Exception {
-		MvcResult result = mockMvc.perform(post("/user/activate/18"))
+		MvcResult result = mockMvc.perform(post("/userRole/activate/18"))
 				.andDo(print())
 				.andExpect(status().isOk())
 				.andExpect(jsonPath("$.type", is("SUCCESS")))
@@ -234,7 +220,7 @@ public class UserControllerTest extends WebAppConfigurationAware {
 
 	@Test
 	public void testDeactivate() throws JsonProcessingException, Exception {
-		MvcResult result = mockMvc.perform(post("/user/deactivate/19"))
+		MvcResult result = mockMvc.perform(post("/userRole/deactivate/19"))
 				.andDo(print())
 				.andExpect(status().isOk())
 				.andExpect(jsonPath("$.type", is("SUCCESS")))

@@ -1,16 +1,20 @@
 package com.github.ginjaninja.bb.domain;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.lang.reflect.Field;
 import java.util.Date;
 
 import javax.persistence.Column;
 
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.github.ginjaninja.bb.dao.GenericDAO;
 
 public abstract class DomainObject {
-	
+	final static Logger LOG = LoggerFactory.getLogger("DomainObject");
 	private Integer id;
     private String activeInd;
     private Date createdDtTm;
@@ -63,27 +67,32 @@ public abstract class DomainObject {
 	 * @throws {@link ReflectiveOperationException}
 	 */
 	@SuppressWarnings("rawtypes")
-	public void fillFields(GenericDAO dao) throws NoSuchFieldException, SecurityException, IllegalArgumentException, ReflectiveOperationException{
-		System.out.println(this.toString());
+	public void fillFields(GenericDAO dao) {
 		Object o = dao.get(this.getId());
 		//for each field in object
 		for(Field field : this.getClass().getDeclaredFields()){
 			//make private field accessible
 			field.setAccessible(true);
-			System.out.println(field.getName() +": " + field.get(this));
 			//if value field in this is null
-			if(field.get(this) == null){
-				//get @column annotation
-				Column columnAnnotation = field.getAnnotation(Column.class);
-				//if @column annotation exists and field is not nullable
-				if(columnAnnotation != null && !columnAnnotation.nullable()){
-					//get field from stored object set value in this object
-					Field oField = o.getClass().getDeclaredField(field.getName());
-					//make private field accessible
-					oField.setAccessible(true);
-					//set value in this object with value from stored object
-					field.set(this, oField.get(o));		
-				}			
+			try {
+				if(field.get(this) == null){
+					//get @column annotation
+					Column columnAnnotation = field.getAnnotation(Column.class);
+					//if @column annotation exists and field is not nullable
+					if(columnAnnotation != null && !columnAnnotation.nullable()){
+						//get field from stored object set value in this object
+						Field oField = o.getClass().getDeclaredField(field.getName());
+						//make private field accessible
+						oField.setAccessible(true);
+						//set value in this object with value from stored object
+						field.set(this, oField.get(o));		
+					}			
+				}
+			} catch (IllegalArgumentException | IllegalAccessException
+					| NoSuchFieldException | SecurityException e) {
+				StringWriter errors = new StringWriter();
+				e.printStackTrace(new PrintWriter(errors));
+				LOG.error(errors.toString());
 			}
 		}
 	}
@@ -110,7 +119,7 @@ public abstract class DomainObject {
 	 * @throws IllegalAccessException 
 	 * @throws IllegalArgumentException 
 	 */
-	public String checkRequired() throws IllegalArgumentException, IllegalAccessException{
+	public String checkRequired() {
 		StringBuilder fieldString = new StringBuilder("The following required properties are missing: ");
 		boolean missing = false;
 		//for each field in object
@@ -118,19 +127,24 @@ public abstract class DomainObject {
 			//make private field accessible
 			field.setAccessible(true);
 			//if value field in this is null
-			if(field.get(this) == null){
-				System.out.println(field.getName() +": " + field.get(this));
-				//get @column annotation
-				Column columnAnnotation = field.getAnnotation(Column.class);
-				//if @column annotation exists and field is not nullable
-				if(columnAnnotation != null && !columnAnnotation.nullable()){
-					
-					missing = true;
-					fieldString.append(field.getType());
-					fieldString.append(": ");
-					fieldString.append(field.getName());
-					fieldString.append(", ");
-				}			
+			try {
+				if(field.get(this) == null){
+					//get @column annotation
+					Column columnAnnotation = field.getAnnotation(Column.class);
+					//if @column annotation exists and field is not nullable
+					if(columnAnnotation != null && !columnAnnotation.nullable()){
+						
+						missing = true;
+						fieldString.append(field.getType());
+						fieldString.append(": ");
+						fieldString.append(field.getName());
+						fieldString.append(", ");
+					}			
+				}
+			} catch (IllegalArgumentException | IllegalAccessException e) {
+				StringWriter errors = new StringWriter();
+				e.printStackTrace(new PrintWriter(errors));
+				LOG.error(errors.toString());
 			}
 		}
 		if(!missing){

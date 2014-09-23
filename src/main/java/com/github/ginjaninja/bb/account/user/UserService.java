@@ -1,5 +1,6 @@
 package com.github.ginjaninja.bb.account.user;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.Map;
@@ -12,6 +13,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.github.ginjaninja.bb.account.account.Account;
+import com.github.ginjaninja.bb.account.account.AccountDAO;
 import com.github.ginjaninja.bb.message.ResultMessage;
 import com.github.ginjaninja.bb.service.ServiceInterface;
 
@@ -22,7 +25,8 @@ public class UserService implements ServiceInterface<User>{
 	
 	@Autowired
 	private UserDAO dao;
-	
+	@Autowired
+	private AccountDAO acctDao;
 	
 
 	/**
@@ -33,8 +37,10 @@ public class UserService implements ServiceInterface<User>{
 	@Override
 	public ResultMessage get(Integer id) {
 		User user = dao.get(id);
+		UserDTO userDTO = new UserDTO();
+		userDTO.convert(user);
 		if(user != null){
-			return ResultMessage.success(user);
+			return ResultMessage.success(userDTO);
 		}else{
 			return ResultMessage.notFound();
 		}
@@ -56,7 +62,9 @@ public class UserService implements ServiceInterface<User>{
 				//save if checkRequired message is empty
 				if(result.length() == 0){
 					user = dao.save(user);
-					message = ResultMessage.success(user);
+					UserDTO userDTO = new UserDTO();
+					userDTO.convert(user);
+					message = ResultMessage.success(userDTO);
 				}else{
 					//return error with missing properties
 					message = ResultMessage.missingProperties(result);
@@ -74,7 +82,9 @@ public class UserService implements ServiceInterface<User>{
 					dao.update(user);
 					//refetch user with parent/child entities
 					user = dao.get(user.getId());
-					message = ResultMessage.success(user);
+					UserDTO userDTO = new UserDTO();
+					userDTO.convert(user);
+					message = ResultMessage.success(userDTO);
 				}
 			}
 		}catch(PersistenceException pe){
@@ -99,7 +109,7 @@ public class UserService implements ServiceInterface<User>{
 		}else{
 			try{
 				dao.delete(user);
-				message = ResultMessage.success(user);
+				message = ResultMessage.success();
 			}catch(PersistenceException pe){
 				message = new ResultMessage(ResultMessage.Type.ERROR, pe.getMessage());
 			}catch(Exception e){
@@ -118,8 +128,16 @@ public class UserService implements ServiceInterface<User>{
 	@Override
 	public ResultMessage getMany(String queryName, Map<String, Object> params) {
 		Collection<User> users = dao.getMany(queryName, params);
+		Collection<UserDTO> dtoUsers = new ArrayList<UserDTO>();
+		UserDTO dto;
 		if(users != null){
-			return ResultMessage.success(users);
+			//loop through collection and convert
+			for(User u : users){
+				dto = new UserDTO();
+				dto.convert(u);
+				dtoUsers.add(dto);
+			}
+			return ResultMessage.success(dtoUsers);
 		}else{
 			return ResultMessage.notFound();
 		}
@@ -133,8 +151,16 @@ public class UserService implements ServiceInterface<User>{
 	@Override
 	public ResultMessage getMany(String queryName) {
 		Collection<User> users = dao.getMany(queryName);
+		Collection<UserDTO> dtoUsers = new ArrayList<UserDTO>();
+		UserDTO dto;
 		if(users != null){
-			return ResultMessage.success(users);
+			//loop through collection and convert
+			for(User u : users){
+				dto = new UserDTO();
+				dto.convert(u);
+				dtoUsers.add(dto);
+			}
+			return ResultMessage.success(dtoUsers);
 		}else{
 			return ResultMessage.notFound();
 		}
@@ -164,5 +190,27 @@ public class UserService implements ServiceInterface<User>{
 		return this.save(user);
 	}
 
+	/**
+	 * Add user to account
+	 * @param userId		{@link Integer}
+	 * @param accountId		{@link Integer}
+	 * @return				{@link ResultMessage}
+	 */
+	public ResultMessage add(Integer userId, Integer accountId){
+		ResultMessage message = ResultMessage.success();
+		
+		User user = dao.get(userId);
+		Account acct = acctDao.get(accountId);
+		if(user == null){
+			message.setText("Can't add user to account. User not found.");
+		}else if(acct == null){
+			message.setText("Can't add user to account. Account not found.");
+		}else{
+			user.setAccount(acct);
+			message = this.save(user);
+		}
+		message.setResult(acct);
+		return message;
+	}
 	
 }
