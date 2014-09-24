@@ -15,7 +15,7 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
-import com.github.ginjaninja.bb.account.userRole.UserRole;
+import com.github.ginjaninja.bb.account.user.User;
 import com.github.ginjaninja.bb.domain.DomainObject;
 
 @Entity
@@ -42,8 +42,8 @@ public class Role extends DomainObject{
     @Column(name = "created_dt_tm", nullable = false) 
     private Date createdDtTm;
 
-    @OneToMany(mappedBy = "role", cascade = CascadeType.ALL)
-    private Collection<UserRole> userRoles = new ArrayList<UserRole>();
+    @OneToMany(mappedBy = "role", cascade = {CascadeType.MERGE, CascadeType.REFRESH})
+    private Collection<User> users = new ArrayList<User>();
     
     
     

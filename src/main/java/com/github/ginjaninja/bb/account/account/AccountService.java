@@ -1,5 +1,6 @@
 package com.github.ginjaninja.bb.account.account;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.Map;
@@ -26,7 +27,9 @@ public class AccountService {
 	public ResultMessage get(Integer id) {
 		Account account = dao.get(id);
 		if(account != null){
-			return ResultMessage.success(account);
+			AccountDTO accountDTO = new AccountDTO();
+			accountDTO.convert(account);
+			return ResultMessage.success(accountDTO);
 		}else{
 			return ResultMessage.notFound();
 		}
@@ -47,7 +50,9 @@ public class AccountService {
 				//save if checkRequired message is empty
 				if(result.length() == 0){
 					account = dao.save(account);
-					message = ResultMessage.success(account);
+					AccountDTO accountDTO = new AccountDTO();
+					accountDTO.convert(account);
+					message = ResultMessage.success(accountDTO);
 				}else{
 					//return error with missing properties
 					message = ResultMessage.missingProperties(result);
@@ -63,7 +68,9 @@ public class AccountService {
 					//update activity date time
 					account.setActivityDtTm(new Date());
 					account = dao.update(account);
-					message = ResultMessage.success(account);
+					AccountDTO accountDTO = new AccountDTO();
+					accountDTO.convert(account);
+					message = ResultMessage.success(accountDTO);
 				}
 			}
 		}catch(PersistenceException pe){
@@ -87,7 +94,7 @@ public class AccountService {
 		}else{
 			try{
 				dao.delete(account);
-				message = ResultMessage.success(account);
+				message = ResultMessage.success();
 			}catch(PersistenceException pe){
 				message = new ResultMessage(ResultMessage.Type.ERROR, pe.getMessage());
 			}catch(Exception e){
@@ -95,6 +102,22 @@ public class AccountService {
 			}
 		}
 		return message;
+	}
+	
+	/**
+	 * Convert collection of Accounts to AccountDTOs
+	 * @param accounts	Collection<Account>
+	 * @return		Collection<AccountDTO>
+	 */
+	private Collection<AccountDTO> convertMany(Collection<Account> accounts){
+		Collection<AccountDTO> dtoAccounts = new ArrayList<AccountDTO>();
+		AccountDTO dto;
+		for(Account u : accounts){
+			dto = new AccountDTO();
+			dto.convert(u);
+			dtoAccounts.add(dto);
+		}
+		return dtoAccounts;
 	}
 	
 	/**
@@ -106,7 +129,7 @@ public class AccountService {
 	public ResultMessage getMany(String queryName, Map<String, Object> params) {
 		Collection<Account> accounts = dao.getMany(queryName, params);
 		if(accounts != null){
-			return ResultMessage.success(accounts);
+			return ResultMessage.success(this.convertMany(accounts));
 		}else{
 			return ResultMessage.notFound();
 		}
@@ -120,7 +143,7 @@ public class AccountService {
 	public ResultMessage getMany(String queryName) {
 		Collection<Account> accounts = dao.getMany(queryName);
 		if(accounts != null){
-			return ResultMessage.success(accounts);
+			return ResultMessage.success(this.convertMany(accounts));
 		}else{
 			return ResultMessage.notFound();
 		}

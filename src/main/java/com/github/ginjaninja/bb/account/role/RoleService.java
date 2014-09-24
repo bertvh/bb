@@ -1,5 +1,6 @@
 package com.github.ginjaninja.bb.account.role;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.Map;
@@ -32,7 +33,9 @@ public class RoleService {
 	public ResultMessage get(Integer id) {
 		Role role = dao.get(id);
 		if(role != null){
-			return ResultMessage.success(role);
+			RoleDTO roleDTO = new RoleDTO();
+			roleDTO.convert(role);
+			return ResultMessage.success(roleDTO);
 		}else{
 			return ResultMessage.notFound();
 		}
@@ -53,7 +56,9 @@ public class RoleService {
 				//save if checkRequired message is empty
 				if(result.length() == 0){
 					role = dao.save(role);
-					message = ResultMessage.success(role);
+					RoleDTO roleDTO = new RoleDTO();
+					roleDTO.convert(role);
+					message = ResultMessage.success(roleDTO);
 				}else{
 					//return error with missing properties
 					message = ResultMessage.missingProperties(result);
@@ -71,7 +76,9 @@ public class RoleService {
 					dao.update(role);
 					//refetch role with parent/child entities
 					role = dao.get(role.getId());
-					message = ResultMessage.success(role);
+					RoleDTO roleDTO = new RoleDTO();
+					roleDTO.convert(role);
+					message = ResultMessage.success(roleDTO);
 				}
 			}
 		}catch(PersistenceException pe){
@@ -104,6 +111,22 @@ public class RoleService {
 		}
 		return message;
 	}
+
+	/**
+	 * Convert collection of Roles to RoleDTOs
+	 * @param roles	Collection<Role>
+	 * @return		Collection<RoleDTO>
+	 */
+	private Collection<RoleDTO> convertMany(Collection<Role> roles){
+		Collection<RoleDTO> dtoRoles = new ArrayList<RoleDTO>();
+		RoleDTO dto;
+		for(Role u : roles){
+			dto = new RoleDTO();
+			dto.convert(u);
+			dtoRoles.add(dto);
+		}
+		return dtoRoles;
+	}
 	
 	/**
 	 * Get many with named query and params
@@ -114,7 +137,7 @@ public class RoleService {
 	public ResultMessage getMany(String queryName, Map<String, Object> params) {
 		Collection<Role> roles = dao.getMany(queryName, params);
 		if(roles != null){
-			return ResultMessage.success(roles);
+			return ResultMessage.success(this.convertMany(roles));
 		}else{
 			return ResultMessage.notFound();
 		}
@@ -128,7 +151,7 @@ public class RoleService {
 	public ResultMessage getMany(String queryName) {
 		Collection<Role> roles = dao.getMany(queryName);
 		if(roles != null){
-			return ResultMessage.success(roles);
+			return ResultMessage.success(this.convertMany(roles));
 		}else{
 			return ResultMessage.notFound();
 		}

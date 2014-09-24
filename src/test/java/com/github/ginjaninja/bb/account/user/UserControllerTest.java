@@ -25,7 +25,7 @@ public class UserControllerTest extends WebAppConfigurationAware {
 			.andDo(print())
 			.andExpect(status().isOk())
 			.andExpect(jsonPath("$.type", is("SUCCESS")))
-			.andExpect(jsonPath("$.result[*].account[*].name", is("Centidel")))
+			.andExpect(jsonPath("$.result[*].account[*].name", is("Jaxworks")))
 		    .andReturn();
 		System.out.println(result.getResponse().getContentAsString());
 	}
@@ -166,12 +166,12 @@ public class UserControllerTest extends WebAppConfigurationAware {
 	@Test
 	public void testAddAccountSuccess() throws JsonProcessingException, Exception {
 		
-		MvcResult result = mockMvc.perform(post("/user/add?user=12&account=1")
+		MvcResult result = mockMvc.perform(post("/user/addaccount?user=12&account=1")
 				.contentType(MediaType.APPLICATION_JSON))
 			.andDo(print())
 			.andExpect(status().isOk())
 			.andExpect(jsonPath("$.type", is("SUCCESS")))
-			.andExpect(jsonPath("$.result[*].account[*].name", is("Centidel")))
+			.andExpect(jsonPath("$.result[*].account[*].name", is("Youspan")))
 		    .andReturn();
 		
 		System.out.println(result.getResponse().getContentAsString());
@@ -180,7 +180,7 @@ public class UserControllerTest extends WebAppConfigurationAware {
 	@Test
 	public void testAddAccountBadUser() throws JsonProcessingException, Exception {
 		
-		MvcResult result = mockMvc.perform(post("/user/add?user=122&account=1")
+		MvcResult result = mockMvc.perform(post("/user/addaccount?user=122&account=1")
 				.contentType(MediaType.APPLICATION_JSON))
 			.andDo(print())
 			.andExpect(status().isNotFound())
@@ -194,12 +194,54 @@ public class UserControllerTest extends WebAppConfigurationAware {
 	@Test
 	public void testAddAccountBadAcct() throws JsonProcessingException, Exception {
 		
-		MvcResult result = mockMvc.perform(post("/user/add?user=12&account=133")
+		MvcResult result = mockMvc.perform(post("/user/addaccount?user=12&account=133")
 				.contentType(MediaType.APPLICATION_JSON))
 			.andDo(print())
 			.andExpect(status().isNotFound())
 			.andExpect(jsonPath("$.type", is("ERROR")))
 			.andExpect(jsonPath("$.text", is("Can't add user to account. Account not found.")))
+		    .andReturn();
+		
+		System.out.println(result.getResponse().getContentAsString());
+	}
+	
+	@Test
+	public void testSetRoleSuccess() throws JsonProcessingException, Exception {
+		
+		MvcResult result = mockMvc.perform(post("/user/setrole?user=22&role=1")
+				.contentType(MediaType.APPLICATION_JSON))
+			.andDo(print())
+			.andExpect(status().isOk())
+			.andExpect(jsonPath("$.type", is("SUCCESS")))
+			.andExpect(jsonPath("$.result[*].role[*].name", is("admin")))
+		    .andReturn();
+		
+		System.out.println(result.getResponse().getContentAsString());
+	}
+	
+	@Test
+	public void testSetRoleBadUser() throws JsonProcessingException, Exception {
+		
+		MvcResult result = mockMvc.perform(post("/user/setrole?user=122&role=1")
+				.contentType(MediaType.APPLICATION_JSON))
+			.andDo(print())
+			.andExpect(status().isNotFound())
+			.andExpect(jsonPath("$.type", is("ERROR")))
+			.andExpect(jsonPath("$.text", is("Can't add role to user. User not found.")))
+		    .andReturn();
+		
+		System.out.println(result.getResponse().getContentAsString());
+	}
+	
+	@Test
+	public void testSetRoleBadRole() throws JsonProcessingException, Exception {
+		
+		MvcResult result = mockMvc.perform(post("/user/setrole?user=12&role=133")
+				.contentType(MediaType.APPLICATION_JSON))
+			.andDo(print())
+			.andExpect(status().isNotFound())
+			.andExpect(jsonPath("$.type", is("ERROR")))
+			.andExpect(jsonPath("$.text", is("Can't add role to user. Role not found.")))
 		    .andReturn();
 		
 		System.out.println(result.getResponse().getContentAsString());

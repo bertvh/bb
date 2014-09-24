@@ -136,11 +136,12 @@ public class UserController extends ControllerExceptionHandler implements Contro
 		return new ResponseEntity<ResultMessage>(message, status);
 	}
 	
-	@RequestMapping(value="/add", params={"user", "account"}, method = RequestMethod.POST)
+	@RequestMapping(value="/addaccount", params={"user", "account"}, method = RequestMethod.POST)
 	@ResponseBody
-	public ResponseEntity<ResultMessage> addToAccount(@RequestParam(value="user") Integer userId, @RequestParam(value="account") Integer accountId){
+	public ResponseEntity<ResultMessage> addToAccount(@RequestParam(value="user") Integer userId, 
+			@RequestParam(value="account") Integer accountId){
 		HttpStatus status;
-		ResultMessage message = userService.add(userId, accountId);
+		ResultMessage message = userService.addAccount(userId, accountId);
 		if(message.getType().equals(ResultMessage.Type.ERROR)){
 			status = HttpStatus.NOT_FOUND;
 		}else{
@@ -149,5 +150,17 @@ public class UserController extends ControllerExceptionHandler implements Contro
 		return new ResponseEntity<ResultMessage>(message, status);
 	}
 	
-
+	@RequestMapping(value="/setrole", params={"user", "role"}, method = RequestMethod.POST)
+	@ResponseBody
+	public ResponseEntity<ResultMessage> addRole(@RequestParam(value="user") Integer userId, 
+			@RequestParam(value="role") Integer roleId){
+		HttpStatus status;
+		ResultMessage message = userService.addRole(userId, roleId);
+		if(message.getType().equals(ResultMessage.Type.ERROR)){
+			status = HttpStatus.NOT_FOUND;
+		}else{
+			status = HttpStatus.OK;
+		}
+		return new ResponseEntity<ResultMessage>(message, status);
+	}
 }

@@ -4,8 +4,8 @@ package com.github.ginjaninja.bb.account.user;
 import java.util.Date;
 
 import com.github.ginjaninja.bb.account.account.Account;
+import com.github.ginjaninja.bb.account.role.Role;
 import com.github.ginjaninja.bb.domain.DomainDTO;
-import com.github.ginjaninja.bb.domain.DomainObject;
 
 public class UserDTO extends DomainDTO {
 	
@@ -13,6 +13,9 @@ public class UserDTO extends DomainDTO {
 	
 	/** Account user belongs to **/
 	private Account account;
+	
+	/** User role **/
+	private Role role;
 	
 	/** User's first name **/
 	private String firstName;
@@ -25,6 +28,9 @@ public class UserDTO extends DomainDTO {
     
     /** User email **/
     private String email;
+    
+    /** Whether user is active or not **/
+    private String activeInd;
     
     /** Date/Time last updated **/
     private Date activityDtTm;
@@ -85,6 +91,22 @@ public class UserDTO extends DomainDTO {
 
 	public void setActivityDtTm(Date activityDtTm) {
 		this.activityDtTm = activityDtTm;
+	}
+
+	public Role getRole() {
+		return role;
+	}
+
+	public void setRole(Role role) {
+		this.role = role;
+	}
+
+	public String getActiveInd() {
+		return activeInd;
+	}
+
+	public void setActiveInd(String activeInd) {
+		this.activeInd = activeInd;
 	}
     
 }

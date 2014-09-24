@@ -14,6 +14,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import com.github.ginjaninja.bb.account.account.Account;
+import com.github.ginjaninja.bb.account.role.Role;
 import com.github.ginjaninja.bb.domain.DomainObject;
 
 @Entity
@@ -28,6 +29,11 @@ public class User extends DomainObject {
 	@ManyToOne
 	@JoinColumn(name = "account_id")
 	private Account account;
+	
+	/** User's role **/
+	@ManyToOne
+	@JoinColumn(name = "role_id", nullable = false)
+	private Role role;
 	
 	/** User's first name **/
 	@Column(name = "first_name", length = 30, nullable = false)
@@ -63,6 +69,7 @@ public class User extends DomainObject {
     
     
     
+    
 	public Account getAccount() {
 		return account;
 	}
@@ -71,6 +78,14 @@ public class User extends DomainObject {
 		this.account = account;
 	}
 
+	public Role getRole() {
+		return role;
+	}
+
+	public void setRole(Role role) {
+		this.role = role;
+	}
+	
 	public String getUserName() {
 		return userName;
 	}

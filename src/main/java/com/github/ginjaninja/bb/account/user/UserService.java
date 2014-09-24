@@ -15,6 +15,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.github.ginjaninja.bb.account.account.Account;
 import com.github.ginjaninja.bb.account.account.AccountDAO;
+import com.github.ginjaninja.bb.account.role.Role;
+import com.github.ginjaninja.bb.account.role.RoleDAO;
 import com.github.ginjaninja.bb.message.ResultMessage;
 
 @Service
@@ -26,8 +28,9 @@ public class UserService {
 	private UserDAO dao;
 	@Autowired
 	private AccountDAO acctDao;
+	@Autowired
+	private RoleDAO roleDAO;
 	
-
 	/**
 	 * Get user by id
 	 * @param 	id 	{@link Integer}
@@ -35,9 +38,9 @@ public class UserService {
 	 */
 	public ResultMessage get(Integer id) {
 		User user = dao.get(id);
-		UserDTO userDTO = new UserDTO();
-		userDTO.convert(user);
 		if(user != null){
+			UserDTO userDTO = new UserDTO();
+			userDTO.convert(user);
 			return ResultMessage.success(userDTO);
 		}else{
 			return ResultMessage.notFound();
@@ -116,6 +119,22 @@ public class UserService {
 	}
 	
 	/**
+	 * Convert collection of Users to UserDTOs
+	 * @param users	Collection<User>
+	 * @return		Collection<UserDTO>
+	 */
+	private Collection<UserDTO> convertMany(Collection<User> users){
+		Collection<UserDTO> dtoUsers = new ArrayList<UserDTO>();
+		UserDTO dto;
+		for(User u : users){
+			dto = new UserDTO();
+			dto.convert(u);
+			dtoUsers.add(dto);
+		}
+		return dtoUsers;
+	}
+	
+	/**
 	 * Get many with named query and params
 	 * @param queryName {@link String}
 	 * @param params	Map<String, Object>
@@ -123,16 +142,8 @@ public class UserService {
 	 */
 	public ResultMessage getMany(String queryName, Map<String, Object> params) {
 		Collection<User> users = dao.getMany(queryName, params);
-		Collection<UserDTO> dtoUsers = new ArrayList<UserDTO>();
-		UserDTO dto;
 		if(users != null){
-			//loop through collection and convert
-			for(User u : users){
-				dto = new UserDTO();
-				dto.convert(u);
-				dtoUsers.add(dto);
-			}
-			return ResultMessage.success(dtoUsers);
+			return ResultMessage.success(this.convertMany(users));
 		}else{
 			return ResultMessage.notFound();
 		}
@@ -145,16 +156,8 @@ public class UserService {
 	 */
 	public ResultMessage getMany(String queryName) {
 		Collection<User> users = dao.getMany(queryName);
-		Collection<UserDTO> dtoUsers = new ArrayList<UserDTO>();
-		UserDTO dto;
 		if(users != null){
-			//loop through collection and convert
-			for(User u : users){
-				dto = new UserDTO();
-				dto.convert(u);
-				dtoUsers.add(dto);
-			}
-			return ResultMessage.success(dtoUsers);
+			return ResultMessage.success(this.convertMany(users));
 		}else{
 			return ResultMessage.notFound();
 		}
@@ -184,13 +187,13 @@ public class UserService {
 
 	/**
 	 * Add user to account
-	 * @param userId		{@link Integer}
-	 * @param accountId		{@link Integer}
+	 * @param userId		{@link Integer} user id
+	 * @param accountId		{@link Integer}	account id
 	 * @return				{@link ResultMessage}
 	 */
-	public ResultMessage add(Integer userId, Integer accountId){
+	public ResultMessage addAccount(Integer userId, Integer accountId){
 		ResultMessage message;
-		
+		//make sure user and account exist
 		User user = dao.get(userId);
 		Account acct = acctDao.get(accountId);
 		if(user == null){
@@ -200,10 +203,38 @@ public class UserService {
 			message = ResultMessage.notFound();
 			message.setText("Can't add user to account. Account not found.");
 		}else{
+			//save account for user
 			user.setAccount(acct);
 			message = this.save(user);
+			message.setResult(user);
 		}
-		message.setResult(user);
+		return message;
+	}
+	
+	
+	/**
+	 * Save user role for user. 
+	 * @param userId	{@link Integer} user id
+	 * @param roleId	{@link Integer} role id
+	 * @return			{@link ResultMessage}
+	 */
+	public ResultMessage addRole(Integer userId, Integer roleId){
+		ResultMessage message;
+		//make sure user and role exist
+		User user = dao.get(userId);
+		Role role = roleDAO.get(roleId);
+		if(user == null){
+			message = ResultMessage.notFound();
+			message.setText("Can't add role to user. User not found.");
+		}else if(role == null){
+			message = ResultMessage.notFound();
+			message.setText("Can't add role to user. Role not found.");
+		}else{
+			//save user role
+			user.setRole(role);
+			message = this.save(user);
+			message.setResult(user);
+		}
 		return message;
 	}
 	
