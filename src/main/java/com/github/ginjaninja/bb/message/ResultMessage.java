@@ -27,7 +27,8 @@ public class ResultMessage {
 		BAD_JSON("Poorly formed JSON object."),
 		TYPE_MISMATCH("Type mismatch. Please check your request."),
 		MISSING_PROPERTIES("Missing required properties."),
-		HAS_CHILDREN("Cannot delete entity with active children.");
+		HAS_CHILDREN("Cannot delete entity with active children."),
+		INTERNAL_SERVER_ERROR("Server error. Please contact application support.");
 		
 		private String message;
 		private Msg(String message){
