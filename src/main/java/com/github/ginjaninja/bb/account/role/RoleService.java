@@ -48,43 +48,37 @@ public class RoleService {
 	 */
 	public ResultMessage save(Role role) {
 		ResultMessage message = null;
-		try{
-			if(role.getId() == null){
-				//set defaults
-				role.fillFields();
-				String result = role.checkRequired();
-				//save if checkRequired message is empty
-				if(result.length() == 0){
-					role = dao.save(role);
-					RoleDTO roleDTO = new RoleDTO();
-					roleDTO.convert(role);
-					message = ResultMessage.success(roleDTO);
-				}else{
-					//return error with missing properties
-					message = ResultMessage.missingProperties(result);
-				}
+		if(role.getId() == null){
+			//set defaults
+			role.fillFields();
+			String result = role.checkRequired();
+			//save if checkRequired message is empty
+			if(result.length() == 0){
+				role = dao.save(role);
+				RoleDTO roleDTO = new RoleDTO();
+				roleDTO.convert(role);
+				message = ResultMessage.success(roleDTO);
 			}else{
-				//get stored role
-				Role storedRole = dao.get(role.getId());
-				if(storedRole == null){
-					message = ResultMessage.notFound();
-				}else{
-					//fill in null fields from stored object
-					role.fillFields(dao);
-					//update activity date time
-					role.setActivityDtTm(new Date());
-					dao.update(role);
-					//refetch role with parent/child entities
-					role = dao.get(role.getId());
-					RoleDTO roleDTO = new RoleDTO();
-					roleDTO.convert(role);
-					message = ResultMessage.success(roleDTO);
-				}
+				//return error with missing properties
+				message = ResultMessage.missingProperties(result);
 			}
-		}catch(PersistenceException pe){
-			message = new ResultMessage(ResultMessage.Type.ERROR, pe.getMessage());
-		}catch(Exception e){
-			message = new ResultMessage(ResultMessage.Type.ERROR, e.getMessage());
+		}else{
+			//get stored role
+			Role storedRole = dao.get(role.getId());
+			if(storedRole == null){
+				message = ResultMessage.notFound();
+			}else{
+				//fill in not nullable fields from stored object
+				role.fillFields(storedRole);
+				//update activity date time
+				role.setActivityDtTm(new Date());
+				dao.update(role);
+				//refetch role with parent/child entities
+				role = dao.get(role.getId());
+				RoleDTO roleDTO = new RoleDTO();
+				roleDTO.convert(role);
+				message = ResultMessage.success(roleDTO);
+			}
 		}
 		return message;
 	}

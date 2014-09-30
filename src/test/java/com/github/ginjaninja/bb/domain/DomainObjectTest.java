@@ -16,12 +16,14 @@ public class DomainObjectTest extends WebAppConfigurationAware {
 	
 	@Test
 	public void testFillFieldsDAO() {
+		User storedUser = dao.get(16);
+		
 		User user = new User();
 		user.setId(16);
 		user.setFirstName("Jack Bob");
 		user.setActiveInd("N");
 		
-		user.fillFields(dao);
+		user.fillFields(storedUser);
 		
 		assertTrue(user.getLastName() != null && user.getActiveInd().equals("N"));
 	}

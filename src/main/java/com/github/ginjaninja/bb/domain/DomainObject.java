@@ -64,10 +64,7 @@ public abstract class DomainObject {
 	 * @param dao {@link GenericDAO} autowired dao
 	 * @param dao
 	 */
-	@SuppressWarnings("rawtypes")
-	public void fillFields(GenericDAO dao) {
-		//Object o = dao.get(this.getId());
-		Object o = dao.get(this.getId());
+	public void fillFields(DomainObject o) {
 		//for each field in object
 		for(Field field : this.getClass().getDeclaredFields()){
 			//make private field accessible

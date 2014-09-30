@@ -42,7 +42,7 @@ public class Role extends DomainObject{
     @Column(name = "created_dt_tm", nullable = false) 
     private Date createdDtTm;
 
-    @OneToMany(mappedBy = "role", cascade = {CascadeType.MERGE, CascadeType.REFRESH})
+    @OneToMany(mappedBy = "role", cascade = {CascadeType.ALL})
     private Collection<User> users = new ArrayList<User>();
     
     

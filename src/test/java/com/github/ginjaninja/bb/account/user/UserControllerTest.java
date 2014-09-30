@@ -72,6 +72,9 @@ public class UserControllerTest extends WebAppConfigurationAware {
 		userJSON.put("email", "brown@email.com");
 		userJSON.put("password", "booya");
 		userJSON.put("userName", "ajbrown");
+		ObjectNode roleJSON = mapper.createObjectNode();
+		roleJSON.put("id", "2");
+		userJSON.put("role", roleJSON);
 		
 		MvcResult result = mockMvc.perform(post("/user")
 				.contentType(MediaType.APPLICATION_JSON)

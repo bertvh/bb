@@ -56,7 +56,7 @@ public class GenericService {
 					throw new IllegalArgumentException(ResultMessage.Msg.NOT_FOUND.toString());
 				}
 				//fill in null fields from stored object
-				o.fillFields(dao);
+				o.fillFields(storedO);
 				//update activity date time
 				o.setActivityDtTm(new Date());
 				o = (DomainObject) dao.update(o);

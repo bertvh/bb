@@ -42,41 +42,35 @@ public class AccountService {
 	 */
 	public ResultMessage save(Account account) {
 		ResultMessage message = null;
-		try{
-			if(account.getId() == null){
-				//set defaults
-				account.fillFields();
-				String result = account.checkRequired();
-				//save if checkRequired message is empty
-				if(result.length() == 0){
-					account = dao.save(account);
-					AccountDTO accountDTO = new AccountDTO();
-					accountDTO.convert(account);
-					message = ResultMessage.success(accountDTO);
-				}else{
-					//return error with missing properties
-					message = ResultMessage.missingProperties(result);
-				}
+		if(account.getId() == null){
+			//set defaults
+			account.fillFields();
+			String result = account.checkRequired();
+			//save if checkRequired message is empty
+			if(result.length() == 0){
+				account = dao.save(account);
+				AccountDTO accountDTO = new AccountDTO();
+				accountDTO.convert(account);
+				message = ResultMessage.success(accountDTO);
 			}else{
-				//get stored account
-				Account storedAccount = dao.get(account.getId());
-				if(storedAccount == null){
-					message = ResultMessage.notFound();
-				}else{
-					//fill in null fields from stored object
-					account.fillFields(dao);
-					//update activity date time
-					account.setActivityDtTm(new Date());
-					account = dao.update(account);
-					AccountDTO accountDTO = new AccountDTO();
-					accountDTO.convert(account);
-					message = ResultMessage.success(accountDTO);
-				}
+				//return error with missing properties
+				message = ResultMessage.missingProperties(result);
 			}
-		}catch(PersistenceException pe){
-			message = new ResultMessage(ResultMessage.Type.ERROR, pe.getMessage());
-		}catch(Exception e){
-			message = new ResultMessage(ResultMessage.Type.ERROR, e.getMessage());
+		}else{
+			//get stored account
+			Account storedAccount = dao.get(account.getId());
+			if(storedAccount == null){
+				message = ResultMessage.notFound();
+			}else{
+				//fill in not nullable fields from stored object
+				account.fillFields(storedAccount);
+				//update activity date time
+				account.setActivityDtTm(new Date());
+				account = dao.update(account);
+				AccountDTO accountDTO = new AccountDTO();
+				accountDTO.convert(account);
+				message = ResultMessage.success(accountDTO);
+			}
 		}
 		return message;
 	}

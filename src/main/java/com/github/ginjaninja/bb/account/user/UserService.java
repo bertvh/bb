@@ -54,44 +54,52 @@ public class UserService {
 	 */
 	public ResultMessage save(User user) {
 		ResultMessage message = null;
-		try{
-			if(user.getId() == null){
-				//set defaults
-				user.fillFields();
-				String result = user.checkRequired();
-				//save if checkRequired message is empty
-				if(result.length() == 0){
-					user = dao.save(user);
-					UserDTO userDTO = new UserDTO();
-					userDTO.convert(user);
-					message = ResultMessage.success(userDTO);
-				}else{
-					//return error with missing properties
-					message = ResultMessage.missingProperties(result);
-				}
+		if(user.getId() == null){
+			//set defaults
+			user.fillFields();
+			String result = user.checkRequired();
+			//save if checkRequired message is empty
+			if(result.length() == 0){
+				user = dao.save(user);
+				UserDTO userDTO = new UserDTO();
+				userDTO.convert(user);
+				message = ResultMessage.success(userDTO);
 			}else{
-				//get stored user
-				User storedUser = dao.get(user.getId());
-				if(storedUser == null){
-					message = ResultMessage.notFound();
-				}else{
-					//fill in null fields from stored object
-					user.fillFields(dao);
-					//update activity date time
-					user.setActivityDtTm(new Date());
-					dao.update(user);
-					//refetch user with parent/child entities
-					user = dao.get(user.getId());
-					UserDTO userDTO = new UserDTO();
-					userDTO.convert(user);
-					message = ResultMessage.success(userDTO);
-				}
+				//return error with missing properties
+				message = ResultMessage.missingProperties(result);
 			}
-		}catch(PersistenceException pe){
-			message = new ResultMessage(ResultMessage.Type.ERROR, pe.getMessage());
-		}catch(Exception e){
-			message = new ResultMessage(ResultMessage.Type.ERROR, e.getMessage());
+		}else{
+			//get stored user
+			User storedUser = dao.get(user.getId());
+			if(storedUser == null){
+				message = ResultMessage.notFound();
+			}else{
+				//fill in not nullable fields from stored object
+				user.fillFields(storedUser);
+				
+				//set acct and role if none defined
+				if(user.getAccount() != null && user.getAccount().getId() != null){
+					user.setAccount(acctDao.get(user.getAccount().getId()));
+				}else{
+					user.setAccount(storedUser.getAccount());
+				}
+				if(user.getRole() != null && user.getRole().getId() != null){
+					user.setRole(roleDAO.get(user.getRole().getId()));
+				}else{
+					user.setRole(storedUser.getRole());
+				}
+				
+					//update activity date time
+				user.setActivityDtTm(new Date());
+				dao.update(user);
+				//refetch user with parent/child entities
+				user = dao.get(user.getId());
+				UserDTO userDTO = new UserDTO();
+				userDTO.convert(user);
+				message = ResultMessage.success(userDTO);
+			}
 		}
+		
 		return message;
 	}
 
