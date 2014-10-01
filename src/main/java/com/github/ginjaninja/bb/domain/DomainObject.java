@@ -15,7 +15,7 @@ import com.github.ginjaninja.bb.dao.GenericDAO;
 
 public abstract class DomainObject {
 	final static Logger LOG = LoggerFactory.getLogger("DomainObject");
-	private Integer id;
+	
     private String activeInd;
     private Date createdDtTm;
     private Date activityDtTm;
@@ -42,14 +42,6 @@ public abstract class DomainObject {
 
 	public void setActivityDtTm(Date activityDtTm) {
 		this.activityDtTm = activityDtTm;
-	}
-
-	public Integer getId() {
-		return id;
-	}
-
-	public void setId(Integer id) {
-		this.id = id;
 	}
 
 	

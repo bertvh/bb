@@ -13,10 +13,11 @@ import javax.persistence.Table;
 
 import com.github.ginjaninja.bb.account.capability.Capability;
 import com.github.ginjaninja.bb.account.role.Role;
+import com.github.ginjaninja.bb.domain.DomainObject;
 
 @Entity
 @Table(name="acct_role_capability")
-public class RoleCapability {
+public class RoleCapability extends DomainObject{
 	@Id
     @GeneratedValue
     @Column(name = "id")
@@ -68,26 +69,32 @@ public class RoleCapability {
 		this.role = role;
 	}
 
+	@Override
 	public String getActiveInd() {
 		return activeInd;
 	}
 
+	@Override
 	public void setActiveInd(String activeInd) {
 		this.activeInd = activeInd;
 	}
 
+	@Override
 	public Date getActivityDtTm() {
 		return activityDtTm;
 	}
 
+	@Override
 	public void setActivityDtTm(Date activityDtTm) {
 		this.activityDtTm = activityDtTm;
 	}
 
+	@Override
 	public Date getCreatedDtTm() {
 		return createdDtTm;
 	}
 
+	@Override
 	public void setCreatedDtTm(Date createdDtTm) {
 		this.createdDtTm = createdDtTm;
 	}

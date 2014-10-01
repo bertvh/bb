@@ -68,11 +68,9 @@ public class Account extends DomainObject{
 		this.name = name;
 	}
 
-	@Override
-    public void setId(Integer id){
+	public void setId(Integer id){
     	this.id = id;
     }
-    @Override
     public Integer getId(){
     	return id;
     }

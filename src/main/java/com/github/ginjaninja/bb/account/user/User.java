@@ -126,11 +126,9 @@ public class User extends DomainObject {
 		this.lastName = lastName;
 	}
 	
-	@Override
-    public void setId(Integer id){
+	public void setId(Integer id){
     	this.id = id;
     }
-    @Override
     public Integer getId(){
     	return id;
     }
