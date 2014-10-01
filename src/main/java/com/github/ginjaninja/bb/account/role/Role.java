@@ -15,6 +15,7 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import com.github.ginjaninja.bb.account.roleCapability.RoleCapability;
 import com.github.ginjaninja.bb.account.user.User;
 import com.github.ginjaninja.bb.domain.DomainObject;
 
@@ -44,6 +45,9 @@ public class Role extends DomainObject{
 
     @OneToMany(mappedBy = "role", cascade = {CascadeType.ALL})
     private Collection<User> users = new ArrayList<User>();
+    
+    @OneToMany(mappedBy = "role", cascade = {CascadeType.ALL})
+    private Collection<RoleCapability> capabilities = new ArrayList<RoleCapability>();
     
     
     
