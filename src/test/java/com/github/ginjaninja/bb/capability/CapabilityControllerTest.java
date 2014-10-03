@@ -300,4 +300,31 @@ public class CapabilityControllerTest extends WebAppConfigurationAware {
 		
 		System.out.println(result.getResponse().getContentAsString());
 	}
+	
+	@Test
+	public void testRemoveCapabilitySuccess() throws JsonProcessingException, Exception {
+		
+		MvcResult result = mockMvc.perform(post("/capability/remove?role=4&capability=3")
+				.contentType(MediaType.APPLICATION_JSON))
+			.andDo(print())
+			.andExpect(status().isOk())
+			.andExpect(jsonPath("$.type", is("SUCCESS")))
+		    .andReturn();
+		
+		System.out.println(result.getResponse().getContentAsString());
+	}
+	
+	@Test
+	public void testRemoveCapabilityNotFound() throws JsonProcessingException, Exception {
+		
+		MvcResult result = mockMvc.perform(post("/capability/remove?role=4&capability=5")
+				.contentType(MediaType.APPLICATION_JSON))
+			.andDo(print())
+			.andExpect(status().isNotFound())
+			.andExpect(jsonPath("$.type", is("ERROR")))
+			.andExpect(jsonPath("$.text", is("Can't remove capability. Role doesn't have capability.")))
+		    .andReturn();
+		
+		System.out.println(result.getResponse().getContentAsString());
+	}
 }

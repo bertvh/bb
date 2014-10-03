@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.persistence.PersistenceException;
@@ -228,6 +229,38 @@ public class CapabilityService {
 	}
 	
 	/**
+	 * Remove capability from role. Deactivate entry instead of deleting
+	 * to allow for auditing.
+	 * @param roleId		{@link Integer}
+	 * @param capabilityId	{@link Integer}
+	 * @return				{@link ResultMessage} with role object as result
+	 */
+	public ResultMessage removeCapability(Integer roleId, Integer capabilityId){
+		ResultMessage message;
+		//get roleCapability
+		Map<String, Object> params = new HashMap<>();
+		params.put("roleId", roleId);
+		params.put("capId", capabilityId);
+		Collection<RoleCapability> rcList = roleCapabilityDAO.getMany("getRoleCapability", params);
+		//if exists
+		if(rcList != null && !rcList.isEmpty()){
+			//shouldn't be more than 1, but loop through list to be sure
+			for(RoleCapability rc : rcList){
+				//set active to N and update
+				rc.setActiveInd("N");
+				rc.fillFields();
+				roleCapabilityDAO.update(rc);
+			}
+			message = ResultMessage.success();
+		}else{
+			message = ResultMessage.notFound();
+			message.setText("Can't remove capability. Role doesn't have capability.");
+		}
+		return message;
+	}
+	
+	
+	/**
 	 * Checks if capability can be saved to a (any) role and returns {@link ResultMessage} 
 	 * @param capability	{@link Capability}
 	 * @return				{@link ResultMessage
@@ -246,4 +279,6 @@ public class CapabilityService {
 		}
 		return message;
 	}
+	
+	
 }

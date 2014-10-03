@@ -9,3 +9,6 @@ insert into acct_capability (id, name, active_ind, created_dt_tm, activity_dt_tm
 insert into acct_capability (id, name, active_ind, created_dt_tm, activity_dt_tm, role_type) values (10, 'make_shoes', 'Y', '2013-11-11 07:05:05', '2014-09-04 13:29:51', 'ROLE');
 insert into acct_capability (id, name, active_ind, created_dt_tm, activity_dt_tm, role_type) values (11, 'eat_dirt', 'Y', '2013-11-11 07:05:05', '2014-09-04 13:29:51', 'ROLE');
 insert into acct_capability (id, name, active_ind, created_dt_tm, activity_dt_tm, role_type) values (12, 'fire_clay', 'N', '2013-11-11 07:05:05', '2014-09-04 13:29:51', 'ROLE');
+insert into acct_capability (id, name, active_ind, created_dt_tm, activity_dt_tm, role_type) values (13, 'silver', 'Y', '2014-01-05 12:21:33', '2014-09-11 12:02:09', 'ACCOUNT');
+insert into acct_capability (id, name, active_ind, created_dt_tm, activity_dt_tm, role_type) values (14, 'platinum', 'Y', '2014-01-05 12:21:33', '2014-09-11 12:02:09', 'ACCOUNT');
+insert into acct_capability (id, name, active_ind, created_dt_tm, activity_dt_tm, role_type) values (15, 'tin', 'Y', '2014-01-05 12:21:33', '2014-09-11 12:02:09', 'ACCOUNT');

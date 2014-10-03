@@ -176,4 +176,24 @@ public class CapabilityController extends ControllerExceptionHandler implements 
 		}
 		return new ResponseEntity<ResultMessage>(message, status);
 	}
+	
+	/**
+	 * Remove capability from role
+	 * @param roleId		{@link Integer}
+	 * @param capabilityId	{@link Integer}
+	 * @return				{@link ResultMessage} with result of role and its capabilities
+	 */
+	@RequestMapping(value="/remove", params={"role", "capability"}, method = RequestMethod.POST)
+	@ResponseBody
+	public ResponseEntity<ResultMessage> removeCapabilityFromRole(@RequestParam(value="role") Integer roleId, 
+			@RequestParam(value="capability") Integer capabilityId){
+		HttpStatus status;
+		ResultMessage message = capabilityService.removeCapability(roleId, capabilityId);
+		if(message.getType().equals(ResultMessage.Type.ERROR)){
+			status = HttpStatus.NOT_FOUND;
+		}else{
+			status = HttpStatus.OK;
+		}
+		return new ResponseEntity<ResultMessage>(message, status);
+	}
 }

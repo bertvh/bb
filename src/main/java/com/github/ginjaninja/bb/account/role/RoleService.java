@@ -14,7 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.github.ginjaninja.bb.account.roleCapability.RoleCapability;
 import com.github.ginjaninja.bb.message.ResultMessage;
 
 @Service
