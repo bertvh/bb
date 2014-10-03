@@ -62,7 +62,7 @@ public class RoleControllerTest extends WebAppConfigurationAware {
 		    .andReturn();
 		System.out.println(result.getResponse().getContentAsString());
 	}
-
+	
 	@Test
 	public void testSave() throws JsonProcessingException, Exception {
 		ObjectMapper mapper = new ObjectMapper();
@@ -202,4 +202,5 @@ public class RoleControllerTest extends WebAppConfigurationAware {
 		System.out.println(result.getResponse().getContentAsString());
 	}
 
+	
 }

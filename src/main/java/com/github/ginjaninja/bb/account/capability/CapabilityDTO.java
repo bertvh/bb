@@ -2,26 +2,19 @@ package com.github.ginjaninja.bb.account.capability;
 
 import java.util.Date;
 
-import javax.persistence.Column;
-
-import com.github.ginjaninja.bb.account.capability.Capability.Type;
 import com.github.ginjaninja.bb.domain.DomainDTO;
 
 public class CapabilityDTO extends DomainDTO{
 	/** Capability name **/
-	@Column(name = "name", length = 30, nullable = false)
-    private String name;
+	private String name;
 	
 	/** Type of capability, chosen from Capability enums above **/
-	@Column(name = "type", length = 10, nullable = false)
-	private Type type;
+	private String type;
 	
 	/** Whether entity is active or not (can be put in trash without deleting permanently) */
-    @Column(name = "active_ind", length = 1, nullable = false)
     private String activeInd;
      
     /** Date/Time last updated **/
-    @Column(name = "activity_dt_tm", nullable = false) 
     private Date activityDtTm;
     
     
@@ -34,11 +27,11 @@ public class CapabilityDTO extends DomainDTO{
 		this.name = name;
 	}
 
-	public Type getType() {
+	public String getType() {
 		return type;
 	}
 
-	public void setType(Type type) {
+	public void setType(String type) {
 		this.type = type;
 	}
 

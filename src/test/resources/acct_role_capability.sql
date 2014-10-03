@@ -1,0 +1,10 @@
+insert into acct_role_capability (id, capability_id, role_id, active_ind, created_dt_tm, activity_dt_tm) values (1, 1, 1, 'Y', '2014-06-01 10:43:25', '2014-09-12 04:34:24');
+insert into acct_role_capability (id, capability_id, role_id, active_ind, created_dt_tm, activity_dt_tm) values (2, 2, 1, 'Y', '2013-09-23 12:34:58', '2014-09-13 22:15:25');
+insert into acct_role_capability (id, capability_id, role_id, active_ind, created_dt_tm, activity_dt_tm) values (3, 3, 1, 'Y', '2013-10-03 02:52:50', '2014-09-07 05:44:35');
+insert into acct_role_capability (id, capability_id, role_id, active_ind, created_dt_tm, activity_dt_tm) values (4, 4, 1, 'Y', '2014-04-14 23:02:29', '2014-09-12 11:35:06');
+insert into acct_role_capability (id, capability_id, role_id, active_ind, created_dt_tm, activity_dt_tm) values (5, 5, 1, 'Y', '2014-05-17 15:53:46', '2014-09-09 07:05:52');
+insert into acct_role_capability (id, capability_id, role_id, active_ind, created_dt_tm, activity_dt_tm) values (6, 3, 3, 'Y', '2014-02-22 00:18:01', '2014-09-09 03:16:28');
+insert into acct_role_capability (id, capability_id, role_id, active_ind, created_dt_tm, activity_dt_tm) values (7, 2, 3, 'Y', '2014-07-21 06:16:27', '2014-09-08 18:15:42');
+insert into acct_role_capability (id, capability_id, role_id, active_ind, created_dt_tm, activity_dt_tm) values (8, 4, 3, 'Y', '2014-03-08 17:41:43', '2014-09-12 08:22:17');
+insert into acct_role_capability (id, capability_id, role_id, active_ind, created_dt_tm, activity_dt_tm) values (9, 5, 3, 'Y', '2014-03-27 09:24:23', '2014-09-10 21:13:47');
+insert into acct_role_capability (id, capability_id, role_id, active_ind, created_dt_tm, activity_dt_tm) values (10, 3, 4, 'Y', '2013-11-25 00:25:02', '2014-09-06 13:16:55');

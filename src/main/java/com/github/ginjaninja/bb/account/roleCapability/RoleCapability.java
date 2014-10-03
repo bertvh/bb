@@ -24,11 +24,11 @@ public class RoleCapability extends DomainObject{
 	private Integer id;
 	
 	@ManyToOne
-	@JoinColumn(name = "capability_id")
+	@JoinColumn(name = "capability_id", nullable = false)
 	private Capability capability;
 	
 	@ManyToOne
-	@JoinColumn(name = "role_id")
+	@JoinColumn(name = "role_id", nullable = false)
 	private Role role;
 	
 	/** Whether entity is active or not (can be put in trash without deleting permanently) */

@@ -10,11 +10,25 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import com.github.ginjaninja.bb.account.roleCapability.RoleCapability;
 import com.github.ginjaninja.bb.domain.DomainObject;
+
+@NamedQueries({
+	@NamedQuery(
+	    name="getRoleCapabilities",
+	    query="SELECT c FROM RoleCapability rc "
+	    		+ "JOIN rc.capability c "
+	    		+ "JOIN rc.role r "
+	    		+ "WHERE r.id = :id "
+	    		+ "AND rc.activeInd = 'Y' "
+	    		+ "AND c.activeInd = 'Y'"
+	)
+})
 
 @Entity
 @Table(name="acct_capability")
@@ -33,8 +47,8 @@ public class Capability extends DomainObject{
     private String name;
 	
 	/** Type of capability, chosen from enums above **/
-	@Column(name = "type", length = 10, nullable = false)
-	private Type type;
+	@Column(name = "role_type", length = 10, nullable = false)
+	private String type;
 	
 	/** Whether entity is active or not (can be put in trash without deleting permanently) */
     @Column(name = "active_ind", length = 1, nullable = false)
@@ -68,11 +82,13 @@ public class Capability extends DomainObject{
 		this.name = name;
 	}
 
-	public Type getType() {
+	
+
+	public String getType() {
 		return type;
 	}
 
-	public void setType(Type type) {
+	public void setType(String type) {
 		this.type = type;
 	}
 

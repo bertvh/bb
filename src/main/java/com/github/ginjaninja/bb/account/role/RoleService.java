@@ -3,6 +3,7 @@ package com.github.ginjaninja.bb.account.role;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
 
 import javax.persistence.PersistenceException;
@@ -13,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.github.ginjaninja.bb.account.roleCapability.RoleCapability;
 import com.github.ginjaninja.bb.message.ResultMessage;
 
 @Service
@@ -22,7 +24,6 @@ public class RoleService {
 	
 	@Autowired
 	private RoleDAO dao;
-	
 	
 
 	/**
@@ -173,4 +174,21 @@ public class RoleService {
 		return this.save(role);
 	}
 
+	/**
+	 * Returns true if role has capability
+	 * @param roleId	{@link Integer} role id
+	 * @param capId		{@link Integer} capability id
+	 * @return			boolean
+	 */
+	public boolean hasCapability(Integer roleId, Integer capId){
+		boolean bool = false;
+		Map<String, Object> params = new HashMap<>();
+		params.put("roleId", roleId);
+		params.put("capId", capId);
+		Collection<Role> roles = dao.getMany("getRoleWithCapability", params);
+		if(roles != null && !roles.isEmpty()){
+			bool = true;
+		}
+		return bool;
+	}
 }

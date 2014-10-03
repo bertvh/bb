@@ -1,5 +1,8 @@
 package com.github.ginjaninja.bb.account.capability;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -10,6 +13,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.github.ginjaninja.bb.controller.ControllerExceptionHandler;
@@ -127,6 +131,44 @@ public class CapabilityController extends ControllerExceptionHandler implements 
 	public ResponseEntity<ResultMessage> deactivate(@PathVariable Integer id) {
 		HttpStatus status;
 		ResultMessage message = capabilityService.deactivate(id);
+		if(message.getType().equals(ResultMessage.Type.ERROR)){
+			status = HttpStatus.NOT_FOUND;
+		}else{
+			status = HttpStatus.OK;
+		}
+		return new ResponseEntity<ResultMessage>(message, status);
+	}
+	
+	/**
+	 * Fetch all capabilities for role
+	 */
+	@RequestMapping(params="role", method = RequestMethod.GET)
+	@ResponseBody
+	public ResponseEntity<ResultMessage> getCapabilities(@RequestParam Integer role) {
+		HttpStatus status;
+		Map<String, Object> params = new HashMap<>();
+		params.put("id", role);
+		ResultMessage message = capabilityService.getMany("getRoleCapabilities", params);
+		if(message.getType().equals(ResultMessage.Type.ERROR)){
+			status = HttpStatus.NOT_FOUND;
+		}else{
+			status = HttpStatus.OK;
+		}
+		return new ResponseEntity<ResultMessage>(message, status);
+	}
+	
+	/**
+	 * Add capability to role
+	 * @param roleId		{@link Integer}
+	 * @param capabilityId	{@link Integer}
+	 * @return				{@link ResultMessage} with result of role and its capabilities
+	 */
+	@RequestMapping(value="/add", params={"role", "capability"}, method = RequestMethod.POST)
+	@ResponseBody
+	public ResponseEntity<ResultMessage> addCapabilityToRole(@RequestParam(value="role") Integer roleId, 
+			@RequestParam(value="capability") Integer capabilityId){
+		HttpStatus status;
+		ResultMessage message = capabilityService.addCapabilityToRole(roleId, capabilityId);
 		if(message.getType().equals(ResultMessage.Type.ERROR)){
 			status = HttpStatus.NOT_FOUND;
 		}else{

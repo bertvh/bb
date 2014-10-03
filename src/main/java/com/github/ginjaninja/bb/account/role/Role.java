@@ -12,12 +12,26 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import com.github.ginjaninja.bb.account.roleCapability.RoleCapability;
 import com.github.ginjaninja.bb.account.user.User;
 import com.github.ginjaninja.bb.domain.DomainObject;
+
+@NamedQueries({
+	@NamedQuery(
+	    name="getRoleWithCapability",
+	    query="SELECT r FROM RoleCapability rc "
+	    		+ "JOIN rc.capability c "
+	    		+ "JOIN rc.role r "
+	    		+ "WHERE r.id = :roleId "
+	    		+ "AND c.id = :capId "
+	    		+ "AND rc.activeInd = 'Y'"
+	)
+})
 
 @Entity
 @Table(name="acct_role")

@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.github.ginjaninja.bb.controller.ControllerExceptionHandler;
@@ -134,4 +135,7 @@ public class RoleController extends ControllerExceptionHandler implements Contro
 		}
 		return new ResponseEntity<ResultMessage>(message, status);
 	}
+	
+	
+	
 }

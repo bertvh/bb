@@ -3,6 +3,7 @@ package com.github.ginjaninja.bb.account.capability;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
 
 import javax.persistence.PersistenceException;
@@ -13,6 +14,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.github.ginjaninja.bb.account.role.Role;
+import com.github.ginjaninja.bb.account.role.RoleDAO;
+import com.github.ginjaninja.bb.account.role.RoleService;
+import com.github.ginjaninja.bb.account.roleCapability.RoleCapability;
+import com.github.ginjaninja.bb.account.roleCapability.RoleCapabilityDAO;
 import com.github.ginjaninja.bb.message.ResultMessage;
 
 @Service
@@ -22,8 +28,12 @@ public class CapabilityService {
 	
 	@Autowired
 	private CapabilityDAO dao;
-	
-	
+	@Autowired
+	private RoleDAO roleDAO;
+	@Autowired
+	private RoleCapabilityDAO roleCapabilityDAO;
+	@Autowired
+	private RoleService roleService;
 
 	/**
 	 * Get capability by id
@@ -172,5 +182,68 @@ public class CapabilityService {
 		capability.setActiveInd("Y");
 		return this.save(capability);
 	}
-
+	
+	/**
+	 * Add capability to role
+	 * @param roleId		{@link Integer}
+	 * @param capabilityId	{@link Integer}
+	 * @return				{@link ResultMessage} with role object as result
+	 */
+	public ResultMessage addCapabilityToRole(Integer roleId, Integer capabilityId){
+		ResultMessage message = null;
+		Role role = roleDAO.get(roleId);
+		Capability capability = dao.get(capabilityId);
+		//make sure role and capability exist
+		if(role == null){
+			message = ResultMessage.notFound();
+			message.setText("Can't add capability to role. Role not found.");
+		}else if(capability == null){
+			message = ResultMessage.notFound();
+			message.setText("Can't add capability to role. Capability not found.");
+		
+		//make sure role doesn't already have capability
+		}else if(roleService.hasCapability(roleId, capabilityId)){
+			message = ResultMessage.doesNotMeetRequirements();
+			message.setText("Role already has capability.");
+		}else{
+			//verify that this is ok to save
+			message = canSaveForRole(capability);
+			
+			if(message.getType().equals(ResultMessage.Type.SUCCESS)){
+				//set role and capability in new roleCapability
+				RoleCapability rc = new RoleCapability();
+				rc.setRole(role);
+				rc.setCapability(capability);
+				//fill required fields
+				rc.fillFields();
+				//save
+				roleCapabilityDAO.save(rc);
+				//return success message with role (and all capabilities) as result
+				Map<String, Object> params = new HashMap<>();
+				params.put("id", roleId);
+				message = this.getMany("getRoleCapabilities", params);
+			}
+		}
+		return message;
+	}
+	
+	/**
+	 * Checks if capability can be saved to a (any) role and returns {@link ResultMessage} 
+	 * @param capability	{@link Capability}
+	 * @return				{@link ResultMessage
+	 */
+	private ResultMessage canSaveForRole(Capability capability){
+		ResultMessage message = ResultMessage.success();
+		
+		//make sure cap is active and role type is ROLE
+		if(capability.getActiveInd().equals("N")){
+			message = ResultMessage.doesNotMeetRequirements();
+		}
+		//make sure cap is ROLE type
+		if(capability.getType().equals(Capability.Type.ACCOUNT.toString())){
+			message = ResultMessage.doesNotMeetRequirements();
+			message.setText("Can't add account capability to role.");
+		}
+		return message;
+	}
 }

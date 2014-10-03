@@ -28,7 +28,8 @@ public class ResultMessage {
 		TYPE_MISMATCH("Type mismatch. Please check your request."),
 		MISSING_PROPERTIES("Missing required properties."),
 		HAS_CHILDREN("Cannot delete entity with active children."),
-		INTERNAL_SERVER_ERROR("Server error. Please contact application support.");
+		INTERNAL_SERVER_ERROR("Server error. Please contact application support."),
+		DOES_NOT_MEET_REQUIREMENTS("Can't save entity. Does not meet requirements.");
 		
 		private String message;
 		private Msg(String message){
@@ -102,6 +103,14 @@ public class ResultMessage {
 	 */
 	public static ResultMessage missingProperties(String propertyString){
 		return new ResultMessage(ResultMessage.Type.ERROR, ResultMessage.Msg.MISSING_PROPERTIES.toString(), propertyString);
+	}
+	
+	/**
+	 * Return Does Not Meet Requirements message (used for save/update)
+	 * @return					{@link ResultMessage}
+	 */
+	public static ResultMessage doesNotMeetRequirements(){
+		return new ResultMessage(ResultMessage.Type.ERROR, ResultMessage.Msg.DOES_NOT_MEET_REQUIREMENTS.toString());
 	}
 	
 	public ResultMessage() {

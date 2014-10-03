@@ -136,7 +136,7 @@ public class UserController extends ControllerExceptionHandler implements Contro
 		return new ResponseEntity<ResultMessage>(message, status);
 	}
 	
-	@RequestMapping(value="/addaccount", params={"user", "account"}, method = RequestMethod.POST)
+	@RequestMapping(value="/setaccount", params={"user", "account"}, method = RequestMethod.POST)
 	@ResponseBody
 	public ResponseEntity<ResultMessage> addToAccount(@RequestParam(value="user") Integer userId, 
 			@RequestParam(value="account") Integer accountId){

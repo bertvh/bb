@@ -169,7 +169,7 @@ public class UserControllerTest extends WebAppConfigurationAware {
 	@Test
 	public void testAddAccountSuccess() throws JsonProcessingException, Exception {
 		
-		MvcResult result = mockMvc.perform(post("/user/addaccount?user=12&account=1")
+		MvcResult result = mockMvc.perform(post("/user/setaccount?user=12&account=1")
 				.contentType(MediaType.APPLICATION_JSON))
 			.andDo(print())
 			.andExpect(status().isOk())
@@ -183,7 +183,7 @@ public class UserControllerTest extends WebAppConfigurationAware {
 	@Test
 	public void testAddAccountBadUser() throws JsonProcessingException, Exception {
 		
-		MvcResult result = mockMvc.perform(post("/user/addaccount?user=122&account=1")
+		MvcResult result = mockMvc.perform(post("/user/setaccount?user=122&account=1")
 				.contentType(MediaType.APPLICATION_JSON))
 			.andDo(print())
 			.andExpect(status().isNotFound())
@@ -197,7 +197,7 @@ public class UserControllerTest extends WebAppConfigurationAware {
 	@Test
 	public void testAddAccountBadAcct() throws JsonProcessingException, Exception {
 		
-		MvcResult result = mockMvc.perform(post("/user/addaccount?user=12&account=133")
+		MvcResult result = mockMvc.perform(post("/user/setaccount?user=12&account=133")
 				.contentType(MediaType.APPLICATION_JSON))
 			.andDo(print())
 			.andExpect(status().isNotFound())
