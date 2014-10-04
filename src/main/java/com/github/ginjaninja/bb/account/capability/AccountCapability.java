@@ -1,5 +1,5 @@
 /** Capabilities assigned to accounts **/
-package com.github.ginjaninja.bb.accountCapability;
+package com.github.ginjaninja.bb.account.capability;
 
 import java.util.Date;
 
