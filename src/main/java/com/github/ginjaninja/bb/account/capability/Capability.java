@@ -15,7 +15,6 @@ import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
-import com.github.ginjaninja.bb.account.roleCapability.RoleCapability;
 import com.github.ginjaninja.bb.domain.DomainObject;
 
 @NamedQueries({

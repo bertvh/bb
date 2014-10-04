@@ -1,5 +1,5 @@
 /** Capabilities assigned to roles **/
-package com.github.ginjaninja.bb.account.roleCapability;
+package com.github.ginjaninja.bb.account.capability;
 
 import java.util.Date;
 
@@ -13,7 +13,6 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
-import com.github.ginjaninja.bb.account.capability.Capability;
 import com.github.ginjaninja.bb.account.role.Role;
 import com.github.ginjaninja.bb.domain.DomainObject;
 

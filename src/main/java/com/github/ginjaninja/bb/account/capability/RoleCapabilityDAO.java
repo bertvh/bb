@@ -1,5 +1,5 @@
 /** Manages data access for RoleCapability **/
-package com.github.ginjaninja.bb.account.roleCapability;
+package com.github.ginjaninja.bb.account.capability;
 
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;

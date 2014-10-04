@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import javax.persistence.PersistenceException;
@@ -18,8 +17,6 @@ import org.springframework.transaction.annotation.Transactional;
 import com.github.ginjaninja.bb.account.role.Role;
 import com.github.ginjaninja.bb.account.role.RoleDAO;
 import com.github.ginjaninja.bb.account.role.RoleService;
-import com.github.ginjaninja.bb.account.roleCapability.RoleCapability;
-import com.github.ginjaninja.bb.account.roleCapability.RoleCapabilityDAO;
 import com.github.ginjaninja.bb.message.ResultMessage;
 
 @Service
