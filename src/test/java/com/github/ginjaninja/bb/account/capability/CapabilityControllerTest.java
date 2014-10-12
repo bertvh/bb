@@ -1,4 +1,4 @@
-package com.github.ginjaninja.bb.capability;
+package com.github.ginjaninja.bb.account.capability;
 
 import static org.hamcrest.Matchers.is;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
