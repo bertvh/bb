@@ -26,7 +26,16 @@ import com.github.ginjaninja.bb.domain.DomainObject;
 	    		+ "WHERE r.id = :id "
 	    		+ "AND rc.activeInd = 'Y' "
 	    		+ "AND c.activeInd = 'Y'"
-	)
+	),
+	@NamedQuery(
+		    name="getAccountCapabilities",
+		    query="SELECT c FROM AccountCapability ac "
+		    		+ "JOIN ac.capability c "
+		    		+ "JOIN ac.account a "
+		    		+ "WHERE a.id = :id "
+		    		+ "AND ac.activeInd = 'Y' "
+		    		+ "AND c.activeInd = 'Y'"
+		)
 })
 
 @Entity

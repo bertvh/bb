@@ -14,6 +14,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.github.ginjaninja.bb.account.account.Account;
+import com.github.ginjaninja.bb.account.account.AccountDAO;
+import com.github.ginjaninja.bb.account.account.AccountService;
 import com.github.ginjaninja.bb.account.role.Role;
 import com.github.ginjaninja.bb.account.role.RoleDAO;
 import com.github.ginjaninja.bb.account.role.RoleService;
@@ -32,7 +35,13 @@ public class CapabilityService {
 	private RoleCapabilityDAO roleCapabilityDAO;
 	@Autowired
 	private RoleService roleService;
-
+	@Autowired
+	private AccountDAO accountDAO;
+	@Autowired
+	private AccountCapabilityDAO accountCapabilityDAO;
+	@Autowired
+	private AccountService accountService;
+	
 	/**
 	 * Get capability by id
 	 * @param 	id 	{@link Integer}
@@ -205,7 +214,7 @@ public class CapabilityService {
 			message.setText("Role already has capability.");
 		}else{
 			//verify that this is ok to save
-			message = canSaveForRole(capability);
+			message = canSave(capability, Capability.Type.ROLE.toString());
 			
 			if(message.getType().equals(ResultMessage.Type.SUCCESS)){
 				//set role and capability in new roleCapability
@@ -232,7 +241,7 @@ public class CapabilityService {
 	 * @param capabilityId	{@link Integer}
 	 * @return				{@link ResultMessage} with role object as result
 	 */
-	public ResultMessage removeCapability(Integer roleId, Integer capabilityId){
+	public ResultMessage removeCapabilityFromRole(Integer roleId, Integer capabilityId){
 		ResultMessage message;
 		//get roleCapability
 		Map<String, Object> params = new HashMap<>();
@@ -258,24 +267,110 @@ public class CapabilityService {
 	
 	
 	/**
-	 * Checks if capability can be saved to a (any) role and returns {@link ResultMessage} 
-	 * @param capability	{@link Capability}
-	 * @return				{@link ResultMessage
+	 * Add capability to account
+	 * @param accountId		{@link Integer}
+	 * @param capabilityId	{@link Integer}
+	 * @return				{@link ResultMessage} with role object as result
 	 */
-	private ResultMessage canSaveForRole(Capability capability){
-		ResultMessage message = ResultMessage.success();
+	public ResultMessage addCapabilityToAccount(Integer accountId, Integer capabilityId){
+		ResultMessage message = null;
+		Account account = accountDAO.get(accountId);
+		Capability capability = dao.get(capabilityId);
+		//make sure account and capability exist
+		if(account == null){
+			message = ResultMessage.notFound();
+			message.setText("Can't add capability to account. Account not found.");
+		}else if(capability == null){
+			message = ResultMessage.notFound();
+			message.setText("Can't add capability to account. Capability not found.");
 		
-		//make sure cap is active and role type is ROLE
-		if(capability.getActiveInd().equals("N")){
+		//make sure account doesn't already have capability
+		}else if(accountService.hasCapability(accountId, capabilityId)){
 			message = ResultMessage.doesNotMeetRequirements();
-		}
-		//make sure cap is ROLE type
-		if(capability.getType().equals(Capability.Type.ACCOUNT.toString())){
-			message = ResultMessage.doesNotMeetRequirements();
-			message.setText("Can't add account capability to role.");
+			message.setText("Account already has capability.");
+		}else{
+			//verify that this is ok to save
+			message = canSave(capability, Capability.Type.ACCOUNT.toString());
+			
+			if(message.getType().equals(ResultMessage.Type.SUCCESS)){
+				//set account and capability in new accountCapability
+				AccountCapability ac = new AccountCapability();
+				ac.setAccount(account);
+				ac.setCapability(capability);
+				//fill required fields
+				ac.fillFields();
+				//save
+				accountCapabilityDAO.save(ac);
+				//return success message with role (and all capabilities) as result
+				Map<String, Object> params = new HashMap<>();
+				params.put("id", accountId);
+				message = this.getMany("getAccountCapabilities", params);
+			}
 		}
 		return message;
 	}
 	
+	/**
+	 * Remove capability from account. Deactivate entry instead of deleting
+	 * to allow for auditing.
+	 * @param accountId		{@link Integer}
+	 * @param capabilityId	{@link Integer}
+	 * @return				{@link ResultMessage} with role object as result
+	 */
+	public ResultMessage removeCapabilityFromAccount(Integer accountId, Integer capabilityId){
+		ResultMessage message;
+		//get roleCapability
+		Map<String, Object> params = new HashMap<>();
+		params.put("accountId", accountId);
+		params.put("capId", capabilityId);
+		Collection<AccountCapability> acList = accountCapabilityDAO.getMany("getAccountCapability", params);
+		//if exists
+		if(acList != null && !acList.isEmpty()){
+			//shouldn't be more than 1, but loop through list to be sure
+			for(AccountCapability ac : acList){
+				//set active to N and update
+				ac.setActiveInd("N");
+				ac.fillFields();
+				accountCapabilityDAO.update(ac);
+			}
+			message = ResultMessage.success();
+		}else{
+			message = ResultMessage.notFound();
+			message.setText("Can't remove capability. Account doesn't have capability.");
+		}
+		return message;
+	}
+	
+	/**
+	 * Checks if capability can be saved to a (any) role or account and returns {@link ResultMessage} 
+	 * @param capability	{@link Capability}
+	 * @param cType			{@link String} ACCOUNT or ROLE
+	 * @return				{@link ResultMessage
+	 */
+	private ResultMessage canSave(Capability capability, String cType){
+		ResultMessage message = ResultMessage.success();
+		
+		//make sure cap is active 
+		if(capability.getActiveInd().equals("N")){
+			message = ResultMessage.doesNotMeetRequirements();
+		}
+		//if type isn't ACCOUNT or ROLE
+		if(!cType.equals(Capability.Type.ACCOUNT.toString()) && !cType.equals(Capability.Type.ROLE.toString())){
+			message = ResultMessage.doesNotMeetRequirements();
+			message.setText("Capability type must be ROLE or ACCOUNT.");
+		}else{
+			//cType is ROLE, but capability is for ACCOUNT
+			if(cType.equals(Capability.Type.ROLE.toString()) && capability.getType().equals(Capability.Type.ACCOUNT.toString())){
+				message = ResultMessage.doesNotMeetRequirements();
+				message.setText("Can't add account capability to role.");
+			}
+			//cType is ACCOUNT, but capability is for ROLE
+			if(cType.equals(Capability.Type.ACCOUNT.toString()) && capability.getType().equals(Capability.Type.ROLE.toString())){
+				message = ResultMessage.doesNotMeetRequirements();
+				message.setText("Can't add role capability to account.");
+			}
+		}
+		return message;
+	}
 	
 }

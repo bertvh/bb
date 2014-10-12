@@ -3,6 +3,7 @@ package com.github.ginjaninja.bb.account.account;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
 
 import javax.persistence.PersistenceException;
@@ -165,4 +166,21 @@ public class AccountService {
 		return this.save(account);
 	}
 
+	/**
+	 * Returns true if account has capability
+	 * @param accountId	{@link Integer} account id
+	 * @param capId		{@link Integer} capability id
+	 * @return			boolean
+	 */
+	public boolean hasCapability(Integer accountId, Integer capId){
+		boolean bool = false;
+		Map<String, Object> params = new HashMap<>();
+		params.put("accountId", accountId);
+		params.put("capId", capId);
+		Collection<Account> accounts = dao.getMany("getAccountWithCapability", params);
+		if(accounts != null && !accounts.isEmpty()){
+			bool = true;
+		}
+		return bool;
+	}
 }

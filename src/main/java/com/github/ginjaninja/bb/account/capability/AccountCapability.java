@@ -9,14 +9,29 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
 import com.github.ginjaninja.bb.account.account.Account;
 import com.github.ginjaninja.bb.account.capability.Capability;
+import com.github.ginjaninja.bb.domain.DomainObject;
+
+@NamedQueries({
+	@NamedQuery(
+	    name="getAccountCapability",
+	    query="SELECT ac FROM AccountCapability ac "
+	    		+ "JOIN ac.capability c "
+	    		+ "JOIN ac.account a "
+	    		+ "WHERE a.id = :accountId "
+	    		+ "AND c.id = :capId "
+	    		+ "AND ac.activeInd = 'Y'"
+	)
+})
 
 @Entity
 @Table(name="acct_account_capability")
-public class AccountCapability {
+public class AccountCapability extends DomainObject{
 	@Id
     @GeneratedValue
     @Column(name = "id")

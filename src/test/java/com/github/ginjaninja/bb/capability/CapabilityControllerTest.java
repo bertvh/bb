@@ -19,7 +19,7 @@ import com.github.ginjaninja.bb.account.capability.Capability;
 import com.github.ginjaninja.bb.config.WebAppConfigurationAware;
 
 public class CapabilityControllerTest extends WebAppConfigurationAware {
-
+	//GET
 	@Test
 	public void testGet() throws Exception{
 		MvcResult result = mockMvc.perform(get("/capability/1"))
@@ -64,6 +64,7 @@ public class CapabilityControllerTest extends WebAppConfigurationAware {
 		System.out.println(result.getResponse().getContentAsString());
 	}
 
+	//SAVE
 	@Test
 	public void testSave() throws JsonProcessingException, Exception {
 		ObjectMapper mapper = new ObjectMapper();
@@ -95,7 +96,7 @@ public class CapabilityControllerTest extends WebAppConfigurationAware {
 			.andExpect(status().isUnprocessableEntity())
 			.andExpect(jsonPath("$.type", is("ERROR")))
 			.andExpect(jsonPath("$.text", is("Missing required properties.")))
-			.andExpect(jsonPath("$.result", is("The following required properties are missing: class java.lang.String: name, class com.github.ginjaninja.bb.account.capability.Capability$Type: type, ")))
+			.andExpect(jsonPath("$.result", is("The following required properties are missing: class java.lang.String: name, class java.lang.String: type, ")))
 		    .andReturn();
 		
 		System.out.println(result.getResponse().getContentAsString());
@@ -119,6 +120,7 @@ public class CapabilityControllerTest extends WebAppConfigurationAware {
 		
 	}
 
+	//UPDATE
 	@Test
 	public void testUpdate() throws JsonProcessingException, Exception {
 		ObjectMapper mapper = new ObjectMapper();
@@ -159,6 +161,7 @@ public class CapabilityControllerTest extends WebAppConfigurationAware {
 		System.out.println(result.getResponse().getContentAsString());
 	}
 	
+	//DELETE
 	@Test
 	public void testDelete() throws JsonProcessingException, Exception {
 		MvcResult result = mockMvc.perform(delete("/capability/11"))
@@ -184,6 +187,7 @@ public class CapabilityControllerTest extends WebAppConfigurationAware {
 		
 	}
 
+	//ACTIVATE
 	@Test
 	public void testActivate() throws JsonProcessingException, Exception {
 		MvcResult result = mockMvc.perform(post("/capability/activate/8"))
@@ -195,6 +199,7 @@ public class CapabilityControllerTest extends WebAppConfigurationAware {
 		System.out.println(result.getResponse().getContentAsString());
 	}
 
+	//DEACTIVATE
 	@Test
 	public void testDeactivate() throws JsonProcessingException, Exception {
 		MvcResult result = mockMvc.perform(post("/capability/deactivate/10"))
@@ -206,125 +211,4 @@ public class CapabilityControllerTest extends WebAppConfigurationAware {
 		System.out.println(result.getResponse().getContentAsString());
 	}
 
-	@Test
-	public void testGetRoleCapabilities() throws Exception{
-		MvcResult result = mockMvc.perform(get("/capability?role=1"))
-			.andDo(print())
-			.andExpect(status().isOk())
-			.andExpect(jsonPath("$.type", is("SUCCESS")))
-			.andExpect(jsonPath("$.result[2].name", is("delete_user")))
-		    .andReturn();
-		System.out.println(result.getResponse().getContentAsString());
-	}
-	
-	@Test
-	public void testAddCapabilitySuccess() throws JsonProcessingException, Exception {
-		
-		MvcResult result = mockMvc.perform(post("/capability/add?role=2&capability=5")
-				.contentType(MediaType.APPLICATION_JSON))
-			.andDo(print())
-			.andExpect(status().isOk())
-			.andExpect(jsonPath("$.type", is("SUCCESS")))
-			.andExpect(jsonPath("$.result[*].name", is("add_account")))
-		    .andReturn();
-		
-		System.out.println(result.getResponse().getContentAsString());
-	}
-	
-	@Test
-	public void testAddCapabilityBadRole() throws JsonProcessingException, Exception {
-		
-		MvcResult result = mockMvc.perform(post("/capability/add?role=22&capability=7")
-				.contentType(MediaType.APPLICATION_JSON))
-			.andDo(print())
-			.andExpect(status().isNotFound())
-			.andExpect(jsonPath("$.type", is("ERROR")))
-			.andExpect(jsonPath("$.text", is("Can't add capability to role. Role not found.")))
-		    .andReturn();
-		
-		System.out.println(result.getResponse().getContentAsString());
-	}
-	
-	@Test
-	public void testAddCapabilityBadCapability() throws JsonProcessingException, Exception {
-		
-		MvcResult result = mockMvc.perform(post("/capability/add?role=2&capability=77")
-				.contentType(MediaType.APPLICATION_JSON))
-			.andDo(print())
-			.andExpect(status().isNotFound())
-			.andExpect(jsonPath("$.type", is("ERROR")))
-			.andExpect(jsonPath("$.text", is("Can't add capability to role. Capability not found.")))
-		    .andReturn();
-		
-		System.out.println(result.getResponse().getContentAsString());
-	}
-	
-	@Test
-	public void testAddCapabilityHasCapability() throws JsonProcessingException, Exception {
-		
-		MvcResult result = mockMvc.perform(post("/capability/add?role=1&capability=2")
-				.contentType(MediaType.APPLICATION_JSON))
-			.andDo(print())
-			.andExpect(status().isNotFound())
-			.andExpect(jsonPath("$.type", is("ERROR")))
-			.andExpect(jsonPath("$.text", is("Role already has capability.")))
-		    .andReturn();
-		
-		System.out.println(result.getResponse().getContentAsString());
-	}
-	
-	@Test
-	public void testAddCapabilityWrongCapability() throws JsonProcessingException, Exception {
-		
-		MvcResult result = mockMvc.perform(post("/capability/add?role=2&capability=7")
-				.contentType(MediaType.APPLICATION_JSON))
-			.andDo(print())
-			.andExpect(status().isNotFound())
-			.andExpect(jsonPath("$.type", is("ERROR")))
-			.andExpect(jsonPath("$.text", is("Can't add account capability to role.")))
-		    .andReturn();
-		
-		System.out.println(result.getResponse().getContentAsString());
-	}
-	
-	@Test
-	public void testAddCapabilityInactiveCapability() throws JsonProcessingException, Exception {
-		
-		MvcResult result = mockMvc.perform(post("/capability/add?role=2&capability=12")
-				.contentType(MediaType.APPLICATION_JSON))
-			.andDo(print())
-			.andExpect(status().isNotFound())
-			.andExpect(jsonPath("$.type", is("ERROR")))
-			.andExpect(jsonPath("$.text", is("Can't save entity. Does not meet requirements.")))
-		    .andReturn();
-		
-		System.out.println(result.getResponse().getContentAsString());
-	}
-	
-	@Test
-	public void testRemoveCapabilitySuccess() throws JsonProcessingException, Exception {
-		
-		MvcResult result = mockMvc.perform(post("/capability/remove?role=4&capability=3")
-				.contentType(MediaType.APPLICATION_JSON))
-			.andDo(print())
-			.andExpect(status().isOk())
-			.andExpect(jsonPath("$.type", is("SUCCESS")))
-		    .andReturn();
-		
-		System.out.println(result.getResponse().getContentAsString());
-	}
-	
-	@Test
-	public void testRemoveCapabilityNotFound() throws JsonProcessingException, Exception {
-		
-		MvcResult result = mockMvc.perform(post("/capability/remove?role=4&capability=5")
-				.contentType(MediaType.APPLICATION_JSON))
-			.andDo(print())
-			.andExpect(status().isNotFound())
-			.andExpect(jsonPath("$.type", is("ERROR")))
-			.andExpect(jsonPath("$.text", is("Can't remove capability. Role doesn't have capability.")))
-		    .andReturn();
-		
-		System.out.println(result.getResponse().getContentAsString());
-	}
 }

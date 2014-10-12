@@ -12,3 +12,4 @@ insert into acct_capability (id, name, active_ind, created_dt_tm, activity_dt_tm
 insert into acct_capability (id, name, active_ind, created_dt_tm, activity_dt_tm, role_type) values (13, 'silver', 'Y', '2014-01-05 12:21:33', '2014-09-11 12:02:09', 'ACCOUNT');
 insert into acct_capability (id, name, active_ind, created_dt_tm, activity_dt_tm, role_type) values (14, 'platinum', 'Y', '2014-01-05 12:21:33', '2014-09-11 12:02:09', 'ACCOUNT');
 insert into acct_capability (id, name, active_ind, created_dt_tm, activity_dt_tm, role_type) values (15, 'tin', 'Y', '2014-01-05 12:21:33', '2014-09-11 12:02:09', 'ACCOUNT');
+insert into acct_capability (id, name, active_ind, created_dt_tm, activity_dt_tm, role_type) values (16, 'magic', 'N', '2014-01-05 12:21:33', '2014-09-11 12:02:09', 'ACCOUNT');

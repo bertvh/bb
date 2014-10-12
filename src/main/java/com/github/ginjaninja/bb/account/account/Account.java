@@ -12,13 +12,25 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import com.github.ginjaninja.bb.account.user.User;
 import com.github.ginjaninja.bb.domain.DomainObject;
 
-
+@NamedQueries({
+	@NamedQuery(
+	    name="getAccountWithCapability",
+	    query="SELECT a FROM AccountCapability ac "
+	    		+ "JOIN ac.capability c "
+	    		+ "JOIN ac.account a "
+	    		+ "WHERE a.id = :accountId "
+	    		+ "AND c.id = :capId "
+	    		+ "AND ac.activeInd = 'Y'"
+	)
+})
 
 @Entity
 @Table(name="acct_account")

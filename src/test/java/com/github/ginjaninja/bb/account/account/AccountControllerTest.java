@@ -157,7 +157,7 @@ public class AccountControllerTest extends WebAppConfigurationAware {
 	
 	@Test
 	public void testDelete() throws JsonProcessingException, Exception {
-		MvcResult result = mockMvc.perform(delete("/account/3"))
+		MvcResult result = mockMvc.perform(delete("/account/10"))
 			.andDo(print())
 			.andExpect(status().isOk())
 			.andExpect(jsonPath("$.type", is("SUCCESS")))

@@ -144,7 +144,7 @@ public class CapabilityController extends ControllerExceptionHandler implements 
 	 */
 	@RequestMapping(params="role", method = RequestMethod.GET)
 	@ResponseBody
-	public ResponseEntity<ResultMessage> getCapabilities(@RequestParam Integer role) {
+	public ResponseEntity<ResultMessage> getRoleCapabilities(@RequestParam Integer role) {
 		HttpStatus status;
 		Map<String, Object> params = new HashMap<>();
 		params.put("id", role);
@@ -188,7 +188,65 @@ public class CapabilityController extends ControllerExceptionHandler implements 
 	public ResponseEntity<ResultMessage> removeCapabilityFromRole(@RequestParam(value="role") Integer roleId, 
 			@RequestParam(value="capability") Integer capabilityId){
 		HttpStatus status;
-		ResultMessage message = capabilityService.removeCapability(roleId, capabilityId);
+		ResultMessage message = capabilityService.removeCapabilityFromRole(roleId, capabilityId);
+		if(message.getType().equals(ResultMessage.Type.ERROR)){
+			status = HttpStatus.NOT_FOUND;
+		}else{
+			status = HttpStatus.OK;
+		}
+		return new ResponseEntity<ResultMessage>(message, status);
+	}
+	
+	/**
+	 * Fetch all capabilities for account
+	 */
+	@RequestMapping(params="account", method = RequestMethod.GET)
+	@ResponseBody
+	public ResponseEntity<ResultMessage> getAccountCapabilities(@RequestParam Integer account) {
+		HttpStatus status;
+		Map<String, Object> params = new HashMap<>();
+		params.put("id", account);
+		ResultMessage message = capabilityService.getMany("getAccountCapabilities", params);
+		if(message.getType().equals(ResultMessage.Type.ERROR)){
+			status = HttpStatus.NOT_FOUND;
+		}else{
+			status = HttpStatus.OK;
+		}
+		return new ResponseEntity<ResultMessage>(message, status);
+	}
+	
+	/**
+	 * Add capability to account
+	 * @param accountId		{@link Integer}
+	 * @param capabilityId	{@link Integer}
+	 * @return				{@link ResultMessage} with result of account and its capabilities
+	 */
+	@RequestMapping(value="/add", params={"account", "capability"}, method = RequestMethod.POST)
+	@ResponseBody
+	public ResponseEntity<ResultMessage> addCapabilityToAccount(@RequestParam(value="account") Integer accountId, 
+			@RequestParam(value="capability") Integer capabilityId){
+		HttpStatus status;
+		ResultMessage message = capabilityService.addCapabilityToAccount(accountId, capabilityId);
+		if(message.getType().equals(ResultMessage.Type.ERROR)){
+			status = HttpStatus.NOT_FOUND;
+		}else{
+			status = HttpStatus.OK;
+		}
+		return new ResponseEntity<ResultMessage>(message, status);
+	}
+	
+	/**
+	 * Remove capability from account
+	 * @param accountId		{@link Integer}
+	 * @param capabilityId	{@link Integer}
+	 * @return				{@link ResultMessage} with result of account and its capabilities
+	 */
+	@RequestMapping(value="/remove", params={"account", "capability"}, method = RequestMethod.POST)
+	@ResponseBody
+	public ResponseEntity<ResultMessage> removeCapabilityFromAccount(@RequestParam(value="account") Integer accountId, 
+			@RequestParam(value="capability") Integer capabilityId){
+		HttpStatus status;
+		ResultMessage message = capabilityService.removeCapabilityFromAccount(accountId, capabilityId);
 		if(message.getType().equals(ResultMessage.Type.ERROR)){
 			status = HttpStatus.NOT_FOUND;
 		}else{
