@@ -3,7 +3,6 @@
  */
 package com.github.ginjaninja.bb.account.account;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 
@@ -58,7 +57,7 @@ public class Account extends DomainObject{
 
     /** All users in account **/
     @OneToMany(mappedBy = "account", cascade = {CascadeType.ALL})
-    private Collection<User> users = new ArrayList<User>();
+    private Collection<User> users;
     
     
     

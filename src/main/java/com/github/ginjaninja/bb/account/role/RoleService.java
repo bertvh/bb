@@ -19,7 +19,7 @@ import com.github.ginjaninja.bb.message.ResultMessage;
 @Service
 @Transactional
 public class RoleService {
-	final static Logger LOG = LoggerFactory.getLogger("RoleService");
+	private static final Logger LOG = LoggerFactory.getLogger("RoleService");
 	
 	@Autowired
 	private RoleDAO dao;
@@ -98,8 +98,10 @@ public class RoleService {
 				dao.delete(role);
 				message = ResultMessage.success(role);
 			}catch(PersistenceException pe){
+				LOG.error("Error deleting Role", pe);
 				message = new ResultMessage(ResultMessage.Type.ERROR, pe.getMessage());
 			}catch(Exception e){
+				LOG.error("Error deleting Role", e);
 				message = new ResultMessage(ResultMessage.Type.ERROR, e.getMessage());
 			}
 		}

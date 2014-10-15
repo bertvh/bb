@@ -1,7 +1,5 @@
 package com.github.ginjaninja.bb.domain;
 
-import java.io.PrintWriter;
-import java.io.StringWriter;
 import java.lang.reflect.Field;
 import java.util.Date;
 
@@ -14,7 +12,7 @@ import org.slf4j.LoggerFactory;
 import com.github.ginjaninja.bb.dao.GenericDAO;
 
 public abstract class DomainObject {
-	final static Logger LOG = LoggerFactory.getLogger("DomainObject");
+	private static final Logger LOG = LoggerFactory.getLogger("DomainObject");
 	
     private String activeInd;
     private Date createdDtTm;
@@ -78,9 +76,7 @@ public abstract class DomainObject {
 				}
 			} catch (IllegalArgumentException | IllegalAccessException
 					| NoSuchFieldException | SecurityException e) {
-				StringWriter errors = new StringWriter();
-				e.printStackTrace(new PrintWriter(errors));
-				LOG.error(errors.toString());
+				LOG.error("Error running fillfields on DomainObject", e);
 			}
 		}
 	}
@@ -130,9 +126,7 @@ public abstract class DomainObject {
 					}			
 				}
 			} catch (IllegalArgumentException | IllegalAccessException e) {
-				StringWriter errors = new StringWriter();
-				e.printStackTrace(new PrintWriter(errors));
-				LOG.error(errors.toString());
+				LOG.error("Error running checkRequired on DomainObject", e);
 			}
 		}
 		if(!missing){

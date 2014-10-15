@@ -1,16 +1,13 @@
 package com.github.ginjaninja.bb.domain;
 
-import java.io.PrintWriter;
-import java.io.StringWriter;
 import java.lang.reflect.Field;
-import java.util.Collection;
 
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public abstract class DomainDTO {
-	final static Logger LOG = LoggerFactory.getLogger("DomainDTO");
+	private static final Logger LOG = LoggerFactory.getLogger("DomainDTO");
 	
 	/**
 	 * Use reflection to convert domain object to DTO 
@@ -33,9 +30,7 @@ public abstract class DomainDTO {
 					}
 				} catch (NoSuchFieldException | SecurityException
 						| IllegalArgumentException | IllegalAccessException e) {
-					StringWriter errors = new StringWriter();
-					e.printStackTrace(new PrintWriter(errors));
-					LOG.error(errors.toString());
+					LOG.error("Error converting DomainObject to DomainObjectDTO", e);
 				}
 			}
 		}

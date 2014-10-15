@@ -8,6 +8,8 @@ import java.util.Map;
 
 import javax.persistence.PersistenceException;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,6 +19,8 @@ import com.github.ginjaninja.bb.message.ResultMessage;
 @Service
 @Transactional
 public class AccountService {
+	private static final Logger LOG = LoggerFactory.getLogger("AccountService");
+	
 	@Autowired
 	private AccountDAO dao;
 	
@@ -91,8 +95,10 @@ public class AccountService {
 				dao.delete(account);
 				message = ResultMessage.success();
 			}catch(PersistenceException pe){
+				LOG.error("Error deleting account", pe);
 				message = new ResultMessage(ResultMessage.Type.ERROR, pe.getMessage());
 			}catch(Exception e){
+				LOG.error("Error deleting account", e);
 				message = new ResultMessage(ResultMessage.Type.ERROR, e.getMessage());
 			}
 		}

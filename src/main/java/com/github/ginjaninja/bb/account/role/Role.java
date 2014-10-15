@@ -3,7 +3,6 @@
  */
 package com.github.ginjaninja.bb.account.role;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 
@@ -57,11 +56,13 @@ public class Role extends DomainObject{
     @Column(name = "created_dt_tm", nullable = false) 
     private Date createdDtTm;
 
-    @OneToMany(mappedBy = "role", cascade = {CascadeType.ALL})
-    private Collection<User> users = new ArrayList<User>();
+    /** users for Role **/
+    @OneToMany(mappedBy = "role", cascade = CascadeType.ALL)
+    private Collection<User> users;
     
-    @OneToMany(mappedBy = "role", cascade = {CascadeType.ALL})
-    private Collection<RoleCapability> capabilities = new ArrayList<RoleCapability>();
+    /** Capabilities for Role **/
+    @OneToMany(mappedBy = "role", cascade = CascadeType.ALL)
+    private Collection<RoleCapability> capabilities;
     
     
     
@@ -109,6 +110,22 @@ public class Role extends DomainObject{
 	@Override
 	public void setCreatedDtTm(Date createdDtTm) {
 		this.createdDtTm = createdDtTm;
+	}
+
+	public Collection<User> getUsers() {
+		return users;
+	}
+
+	public void setUsers(Collection<User> users) {
+		this.users = users;
+	}
+
+	public Collection<RoleCapability> getCapabilities() {
+		return capabilities;
+	}
+
+	public void setCapabilities(Collection<RoleCapability> capabilities) {
+		this.capabilities = capabilities;
 	}
     
     

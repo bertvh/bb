@@ -1,6 +1,7 @@
 package com.github.ginjaninja.bb.dao;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 
 import javax.persistence.EntityManager;
@@ -89,5 +90,34 @@ public abstract class GenericDAO <T>{
 	 */
 	public Collection<T> getMany(String queryName) {
 		return this.getMany(queryName, null);
+	}
+	
+	/**
+	 * Sets params for NamedQueries and returns a single result (index 0)
+	 * @param String queryName
+	 * @param Map<String, Object> params
+	 * @return T entity
+	 */
+	@SuppressWarnings("unchecked")
+	public T getOne(String queryName, Map<String, Object> params) {
+		Query query = entityManager.createNamedQuery(queryName);
+		if(params != null){
+			for(Map.Entry<String, Object> param : params.entrySet()){
+				query.setParameter(param.getKey(), param.getValue());
+			}
+		}
+		List<T> list = query.getResultList();
+		if(list.isEmpty()){
+			return null;
+		}else{
+			return list.get(0);
+		}
+	}
+	
+	/**
+	 * Sets params to null for getOne()
+	 */
+	public T getOne(String queryName) {
+		return this.getOne(queryName, null);
 	}
 }

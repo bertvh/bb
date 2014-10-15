@@ -14,7 +14,6 @@ import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
 import com.github.ginjaninja.bb.account.account.Account;
-import com.github.ginjaninja.bb.account.capability.Capability;
 import com.github.ginjaninja.bb.domain.DomainObject;
 
 @NamedQueries({

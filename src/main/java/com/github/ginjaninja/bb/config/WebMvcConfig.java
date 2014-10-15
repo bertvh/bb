@@ -30,6 +30,7 @@ class WebMvcConfig extends WebMvcConfigurationSupport {
 
     private static final String RESOURCES_HANDLER = "/resources/";
     private static final String RESOURCES_LOCATION = RESOURCES_HANDLER + "**";
+    private static final int CACHE_SECONDS = 5;
 
     @Override
     public RequestMappingHandlerMapping requestMappingHandlerMapping() {
@@ -43,7 +44,7 @@ class WebMvcConfig extends WebMvcConfigurationSupport {
     public MessageSource messageSource() {
         ReloadableResourceBundleMessageSource messageSource = new ReloadableResourceBundleMessageSource();
         messageSource.setBasename(MESSAGE_SOURCE);
-        messageSource.setCacheSeconds(5);
+        messageSource.setCacheSeconds(CACHE_SECONDS);
         return messageSource;
     }
 

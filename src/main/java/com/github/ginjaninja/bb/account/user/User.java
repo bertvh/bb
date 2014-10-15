@@ -11,15 +11,26 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
 import com.github.ginjaninja.bb.account.account.Account;
 import com.github.ginjaninja.bb.account.role.Role;
 import com.github.ginjaninja.bb.domain.DomainObject;
 
+@NamedQueries({
+	@NamedQuery(
+	    name="getUserByUserName",
+	    query="SELECT u FROM User u "
+	    		+ "WHERE u.userName = :userName"
+	)
+})
+
 @Entity
 @Table(name="acct_user")
 public class User extends DomainObject {
+	
 	@Id
     @GeneratedValue
     @Column(name = "id")
@@ -44,7 +55,7 @@ public class User extends DomainObject {
     private String lastName;
 
     /** User name for login/display **/
-    @Column(name = "user_name", length = 30, nullable = false)
+    @Column(name = "user_name", length = 30, unique = true, nullable = false)
     private String userName;
     
     /** User email **/
@@ -68,7 +79,27 @@ public class User extends DomainObject {
     private Date createdDtTm;
     
     
+    public User(){
+    	
+    }
     
+    /**
+     * Constructor from user object. Used for implementing UserDetails.
+     * @param user	{@link User}
+     */
+    public User(User user){
+    	this.account = user.account;
+    	this.activeInd = user.activeInd;
+    	this.activityDtTm = user.activityDtTm;
+    	this.createdDtTm = user.createdDtTm;
+    	this.email = user.email;
+    	this.firstName = user.firstName;
+    	this.id = user.id;
+    	this.lastName = user.lastName;
+    	this.password = user.password;
+    	this.role = user.role;
+    	this.userName = user.userName;
+    }
     
 	public Account getAccount() {
 		return account;

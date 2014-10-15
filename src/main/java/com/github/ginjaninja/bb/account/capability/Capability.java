@@ -1,7 +1,6 @@
 /** Capabilities a role has **/
 package com.github.ginjaninja.bb.account.capability;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 
@@ -15,7 +14,9 @@ import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.github.ginjaninja.bb.domain.DomainObject;
+import com.github.ginjaninja.bb.utils.CustomDateSerializer;
 
 @NamedQueries({
 	@NamedQuery(
@@ -34,6 +35,16 @@ import com.github.ginjaninja.bb.domain.DomainObject;
 		    		+ "JOIN ac.account a "
 		    		+ "WHERE a.id = :id "
 		    		+ "AND ac.activeInd = 'Y' "
+		    		+ "AND c.activeInd = 'Y'"
+	),
+	@NamedQuery(
+		    name="getUserCapabilities",
+		    query="SELECT c FROM User u "
+		    		+ "JOIN u.role r "
+		    		+ "JOIN r.capabilities rc "
+		    		+ "JOIN rc.capability c "
+		    		+ "WHERE u.id = :id "
+		    		+ "AND rc.activeInd = 'Y' "
 		    		+ "AND c.activeInd = 'Y'"
 		)
 })
@@ -70,8 +81,9 @@ public class Capability extends DomainObject{
     @Column(name = "created_dt_tm", nullable = false) 
     private Date createdDtTm;
 
-    @OneToMany(mappedBy = "capability", cascade = {CascadeType.ALL})
-    private Collection<RoleCapability> capabilities = new ArrayList<RoleCapability>();
+    /** RoleCapabilities for Capability **/
+    @OneToMany(mappedBy = "capability", cascade = CascadeType.ALL)
+    private Collection<RoleCapability> capabilities;
     
     
 	public Integer getId() {
@@ -128,6 +140,14 @@ public class Capability extends DomainObject{
 	@Override
 	public void setCreatedDtTm(Date createdDtTm) {
 		this.createdDtTm = createdDtTm;
+	}
+
+	public Collection<RoleCapability> getCapabilities() {
+		return capabilities;
+	}
+
+	public void setCapabilities(Collection<RoleCapability> capabilities) {
+		this.capabilities = capabilities;
 	}
     
     

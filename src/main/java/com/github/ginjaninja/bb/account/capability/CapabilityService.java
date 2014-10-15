@@ -25,7 +25,7 @@ import com.github.ginjaninja.bb.message.ResultMessage;
 @Service
 @Transactional
 public class CapabilityService {
-	final static Logger LOG = LoggerFactory.getLogger("CapabilityService");
+	private static final Logger LOG = LoggerFactory.getLogger("CapabilityService");
 	
 	@Autowired
 	private CapabilityDAO dao;
@@ -115,8 +115,10 @@ public class CapabilityService {
 				dao.delete(capability);
 				message = ResultMessage.success(capability);
 			}catch(PersistenceException pe){
+				LOG.error("Error deleting Capability", pe);
 				message = new ResultMessage(ResultMessage.Type.ERROR, pe.getMessage());
 			}catch(Exception e){
+				LOG.error("Error deleting Capability", e);
 				message = new ResultMessage(ResultMessage.Type.ERROR, e.getMessage());
 			}
 		}
@@ -351,7 +353,7 @@ public class CapabilityService {
 		ResultMessage message = ResultMessage.success();
 		
 		//make sure cap is active 
-		if(capability.getActiveInd().equals("N")){
+		if("N".equals(capability.getActiveInd())){
 			message = ResultMessage.doesNotMeetRequirements();
 		}
 		//if type isn't ACCOUNT or ROLE

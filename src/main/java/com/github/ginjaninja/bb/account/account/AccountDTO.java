@@ -1,10 +1,10 @@
-/** Account object with fewer fields for responding to API requests. **/
 package com.github.ginjaninja.bb.account.account;
 
 import java.util.Date;
 
 import com.github.ginjaninja.bb.domain.DomainDTO;
 
+/** Account object with fewer fields for responding to API requests. **/
 public class AccountDTO extends DomainDTO{
 	private Integer id;
 	

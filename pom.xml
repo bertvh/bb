@@ -303,6 +303,12 @@
                     <encoding>UTF-8</encoding>
                 </configuration>
             </plugin>
+            <!-- sonar plugin -->
+             <plugin>
+		        <groupId>org.codehaus.mojo</groupId>
+		        <artifactId>sonar-maven-plugin</artifactId>
+		        <version>2.1</version>
+		     </plugin>
         </plugins>
     </build>
 </project>
