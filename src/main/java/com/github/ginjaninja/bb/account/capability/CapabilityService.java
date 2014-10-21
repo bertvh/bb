@@ -126,19 +126,19 @@ public class CapabilityService {
 	}
 
 	/**
-	 * Convert collection of Capabilitys to CapabilityDTOs
+	 * Convert collection of Capabilities to CapabilityDTOs
 	 * @param capabilities	Collection<Capability>
 	 * @return		Collection<CapabilityDTO>
 	 */
 	private Collection<CapabilityDTO> convertMany(Collection<Capability> capabilities){
-		Collection<CapabilityDTO> dtoCapabilitys = new ArrayList<CapabilityDTO>();
+		Collection<CapabilityDTO> dtoCapabilities = new ArrayList<CapabilityDTO>();
 		CapabilityDTO dto;
 		for(Capability u : capabilities){
 			dto = new CapabilityDTO();
 			dto.convert(u);
-			dtoCapabilitys.add(dto);
+			dtoCapabilities.add(dto);
 		}
-		return dtoCapabilitys;
+		return dtoCapabilities;
 	}
 	
 	/**

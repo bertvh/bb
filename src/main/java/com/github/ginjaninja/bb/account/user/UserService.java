@@ -15,8 +15,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.github.ginjaninja.bb.account.account.Account;
 import com.github.ginjaninja.bb.account.account.AccountDAO;
+import com.github.ginjaninja.bb.account.account.AccountDTO;
 import com.github.ginjaninja.bb.account.role.Role;
 import com.github.ginjaninja.bb.account.role.RoleDAO;
+import com.github.ginjaninja.bb.account.role.RoleDTO;
 import com.github.ginjaninja.bb.message.ResultMessage;
 
 @Service
@@ -41,6 +43,18 @@ public class UserService {
 		if(user != null){
 			UserDTO userDTO = new UserDTO();
 			userDTO.convert(user);
+			//convert account
+			if(null != user.getAccount()){
+				AccountDTO account = new AccountDTO();
+				account.convert(user.getAccount());
+				userDTO.setAccount(account);
+			}
+			//convert role
+			if(null != user.getRole()){
+				RoleDTO role = new RoleDTO();
+				role.convert(user.getRole());
+				userDTO.setRole(role);
+			}
 			return ResultMessage.success(userDTO);
 		}else{
 			return ResultMessage.notFound();

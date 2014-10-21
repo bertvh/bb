@@ -18,6 +18,7 @@ import com.github.ginjaninja.bb.message.ResultMessage;
 public abstract class ControllerExceptionHandler {
 	private static final Logger LOG = LoggerFactory.getLogger("ControllerExceptionHandler");
 	
+	
 	@ExceptionHandler(TypeMismatchException.class)
 	@ResponseStatus(value=HttpStatus.NOT_FOUND)
 	@ResponseBody

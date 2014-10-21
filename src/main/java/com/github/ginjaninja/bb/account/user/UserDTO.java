@@ -3,8 +3,8 @@ package com.github.ginjaninja.bb.account.user;
 
 import java.util.Date;
 
-import com.github.ginjaninja.bb.account.account.Account;
-import com.github.ginjaninja.bb.account.role.Role;
+import com.github.ginjaninja.bb.account.account.AccountDTO;
+import com.github.ginjaninja.bb.account.role.RoleDTO;
 import com.github.ginjaninja.bb.domain.DomainDTO;
 
 public class UserDTO extends DomainDTO {
@@ -12,10 +12,10 @@ public class UserDTO extends DomainDTO {
 	private Integer id;
 	
 	/** Account user belongs to **/
-	private Account account;
+	private AccountDTO account;
 	
 	/** User role **/
-	private Role role;
+	private RoleDTO role;
 	
 	/** User's first name **/
 	private String firstName;
@@ -45,13 +45,7 @@ public class UserDTO extends DomainDTO {
 		this.id = id;
 	}
 
-	public Account getAccount() {
-		return account;
-	}
-
-	public void setAccount(Account account) {
-		this.account = account;
-	}
+	
 
 	public String getFirstName() {
 		return firstName;
@@ -93,13 +87,7 @@ public class UserDTO extends DomainDTO {
 		this.activityDtTm = activityDtTm;
 	}
 
-	public Role getRole() {
-		return role;
-	}
-
-	public void setRole(Role role) {
-		this.role = role;
-	}
+	
 
 	public String getActiveInd() {
 		return activeInd;
@@ -107,6 +95,22 @@ public class UserDTO extends DomainDTO {
 
 	public void setActiveInd(String activeInd) {
 		this.activeInd = activeInd;
+	}
+
+	public AccountDTO getAccount() {
+		return account;
+	}
+
+	public void setAccount(AccountDTO account) {
+		this.account = account;
+	}
+
+	public RoleDTO getRole() {
+		return role;
+	}
+
+	public void setRole(RoleDTO role) {
+		this.role = role;
 	}
     
 }
