@@ -34,7 +34,7 @@ public class CapabilityControllerRolesTest extends WebAppConfigurationAware {
 			.andDo(print())
 			.andExpect(status().isOk())
 			.andExpect(jsonPath("$.type", is("SUCCESS")))
-			.andExpect(jsonPath("$.result[*].name", is("add_account")))
+			.andExpect(jsonPath("$.result[*].name", is("edit_account")))
 		    .andReturn();
 		
 		System.out.println(result.getResponse().getContentAsString());
