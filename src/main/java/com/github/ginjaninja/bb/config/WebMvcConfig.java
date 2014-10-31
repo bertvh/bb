@@ -4,6 +4,8 @@ import java.util.List;
 
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.ComponentScan.Filter;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 import org.springframework.http.converter.HttpMessageConverter;
@@ -19,15 +21,16 @@ import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandl
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.hibernate4.Hibernate4Module;
+import com.github.ginjaninja.bb.Application;
 
 @Configuration
+@ComponentScan(basePackageClasses = Application.class, includeFilters = @Filter(Controller.class), useDefaultFilters = false)
 class WebMvcConfig extends WebMvcConfigurationSupport {
-	private static final String MESSAGE_SOURCE = "/WEB-INF/i18n/messages";
-
-    private static final String RESOURCES_HANDLER = "/resources/";
+	private static final String RESOURCES_HANDLER = "/resources/";
     private static final String RESOURCES_LOCATION = RESOURCES_HANDLER + "**";
     private static final int CACHE_SECONDS = 5;
-
+    private static final String MESSAGE_SOURCE = RESOURCES_HANDLER + "i18n/messages";
+    
     @Override
     public RequestMappingHandlerMapping requestMappingHandlerMapping() {
         RequestMappingHandlerMapping requestMappingHandlerMapping = super.requestMappingHandlerMapping();
@@ -43,8 +46,6 @@ class WebMvcConfig extends WebMvcConfigurationSupport {
         messageSource.setCacheSeconds(CACHE_SECONDS);
         return messageSource;
     }
-
-   
 
     @Override
     public Validator getValidator() {
