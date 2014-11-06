@@ -1,6 +1,10 @@
 package com.github.ginjaninja.bb.domain;
 
 import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.slf4j.Logger;
@@ -14,14 +18,21 @@ public abstract class DomainDTO {
 	 * @param o {@link DomainObject}
 	 */
 	public void convert(DomainObject o) {
-		if(o != null){
+		if(null != o){
+			//get declared fields for o
+			Field[] oFields = o.getClass().getDeclaredFields();
+			Map<String, Field> oFieldsMap = new HashMap<>();
+			for(Field of : oFields){
+				oFieldsMap.put(of.getName(), of);
+			}
+			
 			for(Field field : this.getClass().getDeclaredFields()){
 	    		//make private field accessible
 	    		field.setAccessible(true);
 	    		//if o has this field 
 	    		try {
-					if(o.getClass().getDeclaredField(field.getName()) != null){
-						//get field from o
+	    			if(oFieldsMap.containsKey(field.getName())){
+	    				//get field from o
 						Field oField = o.getClass().getDeclaredField(field.getName());
 						//make private field accessible
 						oField.setAccessible(true);

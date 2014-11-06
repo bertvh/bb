@@ -11,11 +11,13 @@ public class UserDTO extends DomainDTO {
 	
 	private Integer id;
 	
-	/** Account user belongs to **/
-	private AccountDTO account;
+	/** Account user belongs to as DTO. Can't use field name account because 
+	 * it conflicts with user.account when using reflection to convert to DTO. **/
+	private AccountDTO userAccount;
 	
-	/** User role **/
-	private RoleDTO role;
+	/** User role as DTO. Can't use field name role because 
+	 * it conflicts with user.role when using reflection to convert to DTO. **/
+	private RoleDTO userRole;
 	
 	/** User's first name **/
 	private String firstName;
@@ -87,8 +89,6 @@ public class UserDTO extends DomainDTO {
 		this.activityDtTm = activityDtTm;
 	}
 
-	
-
 	public String getActiveInd() {
 		return activeInd;
 	}
@@ -97,20 +97,21 @@ public class UserDTO extends DomainDTO {
 		this.activeInd = activeInd;
 	}
 
-	public AccountDTO getAccount() {
-		return account;
+	public AccountDTO getUserAccount() {
+		return userAccount;
 	}
 
-	public void setAccount(AccountDTO account) {
-		this.account = account;
+	public void setUserAccount(AccountDTO userAccount) {
+		this.userAccount = userAccount;
 	}
 
-	public RoleDTO getRole() {
-		return role;
+	public RoleDTO getUserRole() {
+		return userRole;
 	}
 
-	public void setRole(RoleDTO role) {
-		this.role = role;
+	public void setUserRole(RoleDTO userRole) {
+		this.userRole = userRole;
 	}
+
     
 }

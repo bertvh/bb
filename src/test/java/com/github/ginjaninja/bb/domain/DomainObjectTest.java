@@ -2,6 +2,8 @@ package com.github.ginjaninja.bb.domain;
 
 import static org.junit.Assert.*;
 
+import java.lang.reflect.InvocationTargetException;
+
 import org.hamcrest.CoreMatchers;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +31,7 @@ public class DomainObjectTest extends WebAppConfigurationAware {
 	}
 
 	@Test
-	public void testFillFields(){
+	public void testFillFields() throws NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException{
 		User user = new User();
 		user.setFirstName("Billy Bob");
 		user.setLastName("Roland");

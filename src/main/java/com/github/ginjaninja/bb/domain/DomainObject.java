@@ -1,6 +1,8 @@
 package com.github.ginjaninja.bb.domain;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -14,35 +16,7 @@ import com.github.ginjaninja.bb.dao.GenericDAO;
 public abstract class DomainObject {
 	private static final Logger LOG = LoggerFactory.getLogger("DomainObject");
 	
-    private String activeInd;
-    private Date createdDtTm;
-    private Date activityDtTm;
-    
-	public String getActiveInd() {
-		return activeInd;
-	}
-
-	public void setActiveInd(String activeInd) {
-		this.activeInd = activeInd;
-	}
-
-	public Date getCreatedDtTm() {
-		return createdDtTm;
-	}
-
-	public void setCreatedDtTm(Date createdDtTm) {
-		this.createdDtTm = createdDtTm;
-	}
-
-	public Date getActivityDtTm() {
-		return activityDtTm;
-	}
-
-	public void setActivityDtTm(Date activityDtTm) {
-		this.activityDtTm = activityDtTm;
-	}
-
-	
+    	
 	@Override
 	public String toString(){
 		return ReflectionToStringBuilder.toString(this);
@@ -50,7 +24,8 @@ public abstract class DomainObject {
 	
 	/**
 	 * Uses reflection to set not nullable members (as defined by @Column) 
-	 * from stored object (with same id) when updating object
+	 * from stored object (with same id) when updating object.
+	 * Does not set child objects (ie User.role)
 	 * @param dao {@link GenericDAO} autowired dao
 	 * @param dao
 	 */
@@ -82,19 +57,64 @@ public abstract class DomainObject {
 	}
 
 	/**
-	 * Set default values for shared not nullable fields.
+	 * Set default values for shared not nullable fields. Uses reflection to check for/invoke setters/getters.
 	 * Used when saving new object.
 	 */
-	public void fillFields(){
-		if(this.getActiveInd() == null){
-			this.setActiveInd("Y");
+	@SuppressWarnings("rawtypes")
+	public void fillFields() {
+		//for String class arg
+		Class[] stringClassArg = new Class[1];
+		stringClassArg[0] = String.class;
+		
+		//for Date class arg
+		Class[] dateClassArg = new Class[1];
+		dateClassArg[0] = Date.class;
+		
+		//for passing Y
+		Object[] sArgs = new Object[1];
+		sArgs[0] = "Y";
+		
+		//for passing date
+		Object[] dArgs = new Object[1];
+		dArgs[0] = new Date();
+		
+		//does this object have getter/setter for activeInd
+		try {
+			if(null != this.getClass().getDeclaredMethod("getActiveInd")  
+				&& null != this.getClass().getDeclaredMethod("setActiveInd", stringClassArg )){
+					Method setActiveInd = this.getClass().getMethod("setActiveInd", stringClassArg);
+					setActiveInd.invoke(this, sArgs);
+			}
+		} catch (NoSuchMethodException | SecurityException
+				| IllegalAccessException | IllegalArgumentException
+				| InvocationTargetException e) {
+			LOG.error("Error using fillFields.setActiveInd on instance of: "+ this.getClass(), e);
 		}
-		if(this.getCreatedDtTm() == null){
-			this.setCreatedDtTm(new Date());
+		
+		try {
+			if(null != this.getClass().getDeclaredMethod("getCreatedDtTm") 
+				&& null != this.getClass().getDeclaredMethod("setCreatedDtTm", dateClassArg)){
+					Method setCreatedDtTm = this.getClass().getMethod("setCreatedDtTm", dateClassArg);
+					setCreatedDtTm.invoke(this, dArgs);
+			}
+		} catch (NoSuchMethodException | SecurityException
+				| IllegalAccessException | IllegalArgumentException
+				| InvocationTargetException e) {
+			LOG.error("Error using fillFields.setCreatedDtTm on instance of: "+ this.getClass(), e);
 		}
-		if(this.getActivityDtTm() == null){
-			this.setActivityDtTm(new Date());
+		
+		try {
+			if(null != this.getClass().getDeclaredMethod("getActivityDtTm") 
+				&& null != this.getClass().getDeclaredMethod("setActivityDtTm", dateClassArg)){
+					Method setCreatedDtTm = this.getClass().getMethod("setActivityDtTm", dateClassArg);
+					setCreatedDtTm.invoke(this, dArgs);
+			}
+		} catch (NoSuchMethodException | SecurityException
+				| IllegalAccessException | IllegalArgumentException
+				| InvocationTargetException e) {
+			LOG.error("Error using fillFields.setActivityDtTm on instance of: "+ this.getClass(), e);
 		}
+		
 	}
 	
 	/**
