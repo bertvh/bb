@@ -25,7 +25,7 @@ public class UserControllerTest extends WebAppConfigurationAware {
 			.andDo(print())
 			.andExpect(status().isOk())
 			.andExpect(jsonPath("$.type", is("SUCCESS")))
-			.andExpect(jsonPath("$.result[*].account[*].name", is("Jaxworks")))
+			.andExpect(jsonPath("$.result[*].userAccount[*].name", is("Jaxworks")))
 		    .andReturn();
 		System.out.println(result.getResponse().getContentAsString());
 	}
@@ -146,27 +146,6 @@ public class UserControllerTest extends WebAppConfigurationAware {
 	}
 	
 	@Test
-	public void testUpdateAccount() throws JsonProcessingException, Exception {
-		ObjectMapper mapper = new ObjectMapper();
-		ObjectNode userJSON = mapper.createObjectNode();
-		userJSON.put("id", "12");
-		ObjectNode acctJSON = mapper.createObjectNode();
-		acctJSON.put("id", "7");
-		userJSON.put("account", acctJSON);
-		
-		MvcResult result = mockMvc.perform(post("/user")
-				.contentType(MediaType.APPLICATION_JSON)
-				.content(mapper.writeValueAsBytes(userJSON)))
-			.andDo(print())
-			.andExpect(status().isOk())
-			.andExpect(jsonPath("$.type", is("SUCCESS")))
-			.andExpect(jsonPath("$.result[*].account[*].name", is("Centidel")))
-		    .andReturn();
-		
-		System.out.println(result.getResponse().getContentAsString());
-	}
-	
-	@Test
 	public void testAddAccountSuccess() throws JsonProcessingException, Exception {
 		
 		MvcResult result = mockMvc.perform(post("/user/setaccount?user=12&account=1")
@@ -174,7 +153,7 @@ public class UserControllerTest extends WebAppConfigurationAware {
 			.andDo(print())
 			.andExpect(status().isOk())
 			.andExpect(jsonPath("$.type", is("SUCCESS")))
-			.andExpect(jsonPath("$.result[*].account[*].name", is("Youspan")))
+			.andExpect(jsonPath("$.result[*].account[*].name", is("Yokohama")))
 		    .andReturn();
 		
 		System.out.println(result.getResponse().getContentAsString());
