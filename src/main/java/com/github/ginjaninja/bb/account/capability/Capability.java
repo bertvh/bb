@@ -60,7 +60,7 @@ public class Capability extends DomainObject{
 	private Integer id;
 	
 	/** Capability name **/
-	@Column(name = "name", length = 30, nullable = false)
+	@Column(name = "name", length = 30, nullable = false, unique= true)
     private String name;
 	
 	/** Type of capability, chosen from enums above **/

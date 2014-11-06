@@ -16,8 +16,11 @@ import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import org.hibernate.validator.constraints.NotBlank;
+
 import com.github.ginjaninja.bb.account.user.User;
 import com.github.ginjaninja.bb.domain.DomainObject;
+import com.github.ginjaninja.bb.validator.UniqueKey;
 
 @NamedQueries({
 	@NamedQuery(
@@ -31,6 +34,7 @@ import com.github.ginjaninja.bb.domain.DomainObject;
 	)
 })
 
+@UniqueKey(columnNames={"name"})
 @Entity
 @Table(name="acct_account")
 public class Account extends DomainObject{
@@ -40,7 +44,8 @@ public class Account extends DomainObject{
 	private Integer id;
 	
 	/** name of account **/
-	@Column(name = "name", length = 50, nullable = false)
+	@NotBlank
+	@Column(name = "name", length = 50, nullable = false, unique= true)
 	private String name;
 	
 	/** Whether entity is active or not (can be put in trash without deleting permanently) */

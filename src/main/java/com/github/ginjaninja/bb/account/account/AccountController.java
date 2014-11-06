@@ -1,6 +1,9 @@
 package com.github.ginjaninja.bb.account.account;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -14,6 +17,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.github.ginjaninja.bb.controller.ControllerExceptionHandler;
 import com.github.ginjaninja.bb.controller.ControllerInterface;
+import com.github.ginjaninja.bb.message.MessageBuilder;
 import com.github.ginjaninja.bb.message.ResultMessage;
 
 @Controller
@@ -21,6 +25,15 @@ import com.github.ginjaninja.bb.message.ResultMessage;
 public class AccountController extends ControllerExceptionHandler implements ControllerInterface<Account>{
 	@Autowired
 	private AccountService accountService;
+	@Autowired
+	private MessageSource messageSource;
+	
+	/*
+	@InitBinder
+	protected void initBinder(WebDataBinder binder) {
+	    binder.setValidator(new AccountValidator());
+	}
+	*/
 	
 	/**
 	 * Unimplemented get
@@ -61,11 +74,12 @@ public class AccountController extends ControllerExceptionHandler implements Con
 			produces = MediaType.APPLICATION_JSON_VALUE, 
 			consumes = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody
-	public ResponseEntity<ResultMessage> save(@RequestBody final Account account, BindingResult bindingResult) {
+	public ResponseEntity<ResultMessage> save(@Valid @RequestBody final Account account, BindingResult bindingResult) {
 		ResultMessage message;
 		HttpStatus status;
 		if(bindingResult.hasErrors()){
-			message = new ResultMessage(ResultMessage.Type.ERROR, ResultMessage.Msg.BAD_JSON.toString());
+			 
+			message = new ResultMessage(ResultMessage.Type.ERROR, MessageBuilder.build(messageSource, bindingResult.getAllErrors()));
 			status = HttpStatus.BAD_REQUEST;
 		}else{
 		    message = accountService.save(account);

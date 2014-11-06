@@ -91,8 +91,7 @@ public class AccountControllerTest extends WebAppConfigurationAware {
 			.andDo(print())
 			.andExpect(status().isUnprocessableEntity())
 			.andExpect(jsonPath("$.type", is("ERROR")))
-			.andExpect(jsonPath("$.text", is("Missing required properties.")))
-			.andExpect(jsonPath("$.result", is("The following required properties are missing: class java.lang.String: name, ")))
+			.andExpect(jsonPath("$.text", is("Account name is required")))
 		    .andReturn();
 		
 		System.out.println(result.getResponse().getContentAsString());
@@ -117,6 +116,24 @@ public class AccountControllerTest extends WebAppConfigurationAware {
 		
 	}
 
+	@Test
+	public void testSaveDuplicate() throws JsonProcessingException, Exception {
+		ObjectMapper mapper = new ObjectMapper();
+		ObjectNode accountJSON = mapper.createObjectNode();
+		accountJSON.put("name", "Yombu");
+		
+		MvcResult result = mockMvc.perform(post("/account")
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(mapper.writeValueAsBytes(accountJSON)))
+			.andDo(print())
+			.andExpect(status().isOk())
+			.andExpect(jsonPath("$.type", is("SUCCESS")))
+			.andExpect(jsonPath("$.text", is("OK")))
+			.andExpect(jsonPath("$.result[*].name", is("Yokohama")))
+		    .andReturn();
+		System.out.println(result.getResponse().getContentAsString());
+	}
+	
 	@Test
 	public void testUpdate() throws JsonProcessingException, Exception {
 		ObjectMapper mapper = new ObjectMapper();
