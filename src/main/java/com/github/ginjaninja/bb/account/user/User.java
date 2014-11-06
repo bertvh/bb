@@ -59,7 +59,7 @@ public class User extends DomainObject {
     private String userName;
     
     /** User email **/
-    @Column(name = "email", length = 256, nullable = false)
+    @Column(name = "email", length = 256, nullable = false, unique = true)
     private String email;
     
     /** User password **/

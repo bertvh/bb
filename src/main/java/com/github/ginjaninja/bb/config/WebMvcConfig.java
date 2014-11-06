@@ -29,7 +29,9 @@ class WebMvcConfig extends WebMvcConfigurationSupport {
 	private static final String RESOURCES_HANDLER = "/resources/";
     private static final String RESOURCES_LOCATION = RESOURCES_HANDLER + "**";
     private static final int CACHE_SECONDS = 5;
-    private static final String MESSAGE_SOURCE = RESOURCES_HANDLER + "i18n/messages";
+    
+    //set messages properties file
+    private static final String MESSAGE_SOURCE = "classpath:/i18n/messages_en_US";
     
     @Override
     public RequestMappingHandlerMapping requestMappingHandlerMapping() {

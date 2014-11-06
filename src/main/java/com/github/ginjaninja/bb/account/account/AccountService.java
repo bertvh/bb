@@ -50,17 +50,10 @@ public class AccountService {
 		if(account.getId() == null){
 			//set defaults
 			account.fillFields();
-			String result = account.checkRequired();
-			//save if checkRequired message is empty
-			if(result.length() == 0){
-				account = dao.save(account);
-				AccountDTO accountDTO = new AccountDTO();
-				accountDTO.convert(account);
-				message = ResultMessage.success(accountDTO);
-			}else{
-				//return error with missing properties
-				message = ResultMessage.missingProperties(result);
-			}
+			account = dao.save(account);
+			AccountDTO accountDTO = new AccountDTO();
+			accountDTO.convert(account);
+			message = ResultMessage.success(accountDTO);
 		}else{
 			//get stored account
 			Account storedAccount = dao.get(account.getId());
