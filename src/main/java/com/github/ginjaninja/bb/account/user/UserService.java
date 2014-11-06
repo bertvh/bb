@@ -47,13 +47,13 @@ public class UserService {
 			if(null != user.getAccount()){
 				AccountDTO account = new AccountDTO();
 				account.convert(user.getAccount());
-				userDTO.setAccount(account);
+				userDTO.setUserAccount(account);
 			}
 			//convert role
 			if(null != user.getRole()){
 				RoleDTO role = new RoleDTO();
 				role.convert(user.getRole());
-				userDTO.setRole(role);
+				userDTO.setUserRole(role);
 			}
 			return ResultMessage.success(userDTO);
 		}else{
@@ -91,19 +91,14 @@ public class UserService {
 				//fill in not nullable fields from stored object
 				user.fillFields(storedUser);
 				
-				//set acct and role if none defined
-				if(user.getAccount() != null && user.getAccount().getId() != null){
-					user.setAccount(acctDao.get(user.getAccount().getId()));
-				}else{
-					user.setAccount(storedUser.getAccount());
-				}
+				//set role from storedUser if none specified
 				if(user.getRole() != null && user.getRole().getId() != null){
 					user.setRole(roleDAO.get(user.getRole().getId()));
 				}else{
 					user.setRole(storedUser.getRole());
 				}
 				
-					//update activity date time
+				//update activity date time
 				user.setActivityDtTm(new Date());
 				dao.update(user);
 				//refetch user with parent/child entities

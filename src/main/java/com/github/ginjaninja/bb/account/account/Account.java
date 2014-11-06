@@ -61,7 +61,7 @@ public class Account extends DomainObject{
     private Date createdDtTm;
 
     /** All users in account **/
-    @OneToMany(mappedBy = "account", cascade = {CascadeType.ALL})
+    @OneToMany(mappedBy = "account", cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     private Collection<User> users;
     
     
@@ -91,27 +91,26 @@ public class Account extends DomainObject{
     	return id;
     }
     
-	@Override
 	public String getActiveInd() {
 		return activeInd;
 	}
-	@Override
+	
 	public void setActiveInd(String activeInd) {
 		this.activeInd = activeInd;
 	}
-	@Override
+	
 	public Date getCreatedDtTm() {
 		return createdDtTm;
 	}
-	@Override
+	
 	public void setCreatedDtTm(Date createdDtTm) {
 		this.createdDtTm = createdDtTm;
 	}
-	@Override
+	
 	public Date getActivityDtTm() {
 		return activityDtTm;
 	}
-	@Override
+	
 	public void setActivityDtTm(Date activityDtTm) {
 		this.activityDtTm = activityDtTm;
 	}

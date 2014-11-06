@@ -1,4 +1,4 @@
-insert into acct_account (id, name, active_ind, created_dt_tm, activity_dt_tm) values (1, 'Youspan', 'Y', '2014-06-08 07:41:23', '2014-09-03 12:45:02');
+insert into acct_account (id, name, active_ind, created_dt_tm, activity_dt_tm) values (1, 'Yokohama', 'Y', '2014-06-08 07:41:23', '2014-09-03 12:45:02');
 insert into acct_account (id, name, active_ind, created_dt_tm, activity_dt_tm) values (2, 'Wikizz', 'Y', '2014-06-24 09:54:16', '2014-09-05 09:56:25');
 insert into acct_account (id, name, active_ind, created_dt_tm, activity_dt_tm) values (3, 'Quamba', 'Y', '2013-11-21 08:07:55', '2014-09-03 21:53:40');
 insert into acct_account (id, name, active_ind, created_dt_tm, activity_dt_tm) values (4, 'Vimbo', 'Y', '2014-06-11 16:43:23', '2014-09-12 21:42:10');
