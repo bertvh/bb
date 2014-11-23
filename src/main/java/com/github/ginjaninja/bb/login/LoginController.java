@@ -1,7 +1,7 @@
 package com.github.ginjaninja.bb.login;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -14,7 +14,7 @@ import com.github.ginjaninja.bb.message.ResultMessage;
 @Controller
 @RequestMapping(value={"login"})
 public class LoginController {
-	private static final Log LOG =  LogFactory.getLog(LoginController.class);
+	private static final Logger LOG = LoggerFactory.getLogger("LoginController");
 	
 	@RequestMapping(value={"", "/"}, method = RequestMethod.GET)
 	@ResponseBody
