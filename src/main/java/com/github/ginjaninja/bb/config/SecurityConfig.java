@@ -8,15 +8,18 @@ import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 
+import com.github.ginjaninja.bb.auth.AccountUserDetailsService;
+
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
-
-    @Autowired
-    public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
+	@Autowired
+	private AccountUserDetailsService userDetailsService;
+	
+    @Override
+    public void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth
-            .inMemoryAuthentication()
-                .withUser("user").password("password").roles("USER");
+            .userDetailsService(userDetailsService);
     }
     
     @Override
@@ -30,13 +33,16 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	protected void configure(HttpSecurity http) throws Exception {
  
 	  http
+	  	.csrf().disable()
 		.authorizeRequests() // if a request is not matched by any other WebSecurityConfigurerAdapter that has a @Order of less than this one
         	.antMatchers("/resources/**","/").permitAll()
             .anyRequest().authenticated() // it requires authentication
             .and() // and
          .formLogin() // use form based login for authentication
-         	.loginPage("/login") // login page is available at /login
-            .permitAll() // allow everybody to access the login page
+         	.loginPage("/login/form") // login page is available at /login
+            .loginProcessingUrl("/login")
+            .failureUrl("/login/form?error")
+         	.permitAll() // allow everybody to access the login page
             ;
 	}
 }

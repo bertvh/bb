@@ -12,18 +12,24 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.github.ginjaninja.bb.message.ResultMessage;
 
 @Controller
-@RequestMapping(value={"login"})
+@RequestMapping("/v")
 public class LoginController {
 	private static final Logger LOG = LoggerFactory.getLogger("LoginController");
 	
-	@RequestMapping(value={"", "/"}, method = RequestMethod.GET)
+	/**
+	 * Unimplemented get
+	 */
+	@RequestMapping(value = {"", "/"}, method = RequestMethod.GET)
 	@ResponseBody
 	public ResponseEntity<ResultMessage> get(){
-		System.out.println("LOGIN");
-		LOG.info("Login Controller");
+		return new ResponseEntity<ResultMessage>(new ResultMessage(ResultMessage.Type.ERROR, "GET not allowed at this address"), 
+				HttpStatus.METHOD_NOT_ALLOWED);
+	}
+	
+	@RequestMapping(value = {"", "/"}, method = RequestMethod.POST, params={"username","password"})
+	@ResponseBody
+	public ResponseEntity<ResultMessage> post(){
 		return new ResponseEntity<ResultMessage>(ResultMessage.success(), 
 				HttpStatus.OK);
 	}
-	
-	
 }
