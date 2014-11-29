@@ -5,13 +5,13 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.annotation.web.servlet.configuration.EnableWebMvcSecurity;
 
 import com.github.ginjaninja.bb.auth.AccountUserDetailsService;
 
 @Configuration
-@EnableWebSecurity
+@EnableWebMvcSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	@Autowired
 	private AccountUserDetailsService userDetailsService;
@@ -39,9 +39,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             .anyRequest().authenticated() // it requires authentication
             .and() // and
          .formLogin() // use form based login for authentication
-         	.loginPage("/login/form") // login page is available at /login
+         	.loginPage("/login") // login page is available at /login
             .loginProcessingUrl("/login")
-            .failureUrl("/login/form?error")
+            .failureUrl("/login?error")
          	.permitAll() // allow everybody to access the login page
             ;
 	}

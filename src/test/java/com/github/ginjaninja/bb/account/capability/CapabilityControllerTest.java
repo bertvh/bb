@@ -211,4 +211,15 @@ public class CapabilityControllerTest extends WebAppConfigurationAware {
 		System.out.println(result.getResponse().getContentAsString());
 	}
 
+	//get user capabilities
+	@Test
+	public void testGetUserCapabilities() throws Exception{
+		MvcResult result = mockMvc.perform(get("/capability?user=30"))
+			.andDo(print())
+			.andExpect(status().isOk())
+			.andExpect(jsonPath("$.type", is("SUCCESS")))
+			.andExpect(jsonPath("$.result[2].name", is("delete_user")))
+		    .andReturn();
+		System.out.println(result.getResponse().getContentAsString());
+	}
 }

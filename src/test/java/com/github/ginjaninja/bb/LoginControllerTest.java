@@ -15,15 +15,14 @@ public class LoginControllerTest extends WebAppConfigurationAware {
 
 	@Test
 	public void testGet() throws Exception {
-		mockMvc.perform(get("/login?username=user&password=password"))
+		mockMvc.perform(get("/login"))
 			.andDo(print())
-			.andExpect(status().isMethodNotAllowed())
-			.andExpect(jsonPath("$.type", is("ERROR")));
+			.andExpect(status().isOk());
 	}
 
 	@Test
 	public void testPostError() throws Exception {
-		mockMvc.perform(post("/login?username=user&password=password"))
+		mockMvc.perform(post("/login?sandrewst=user&password=Lr9ysX"))
 			.andDo(print())
 			.andExpect(status().isNotFound())
 			.andExpect(jsonPath("$.type", is("ERROR")));

@@ -4,6 +4,8 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
@@ -16,16 +18,21 @@ import com.github.ginjaninja.bb.account.capability.Capability;
 import com.github.ginjaninja.bb.account.capability.CapabilityDAO;
 import com.github.ginjaninja.bb.account.user.User;
 import com.github.ginjaninja.bb.account.user.UserDAO;
+import com.github.ginjaninja.bb.account.user.UserLoginDTO;
 
 @Service
 public class AccountUserDetailsService implements UserDetailsService {
+	private static final Logger LOG = LoggerFactory.getLogger("UserDetailsService");
+	
 	@Autowired
 	private UserDAO userDAO;
-	
+	@Autowired
+	private CapabilityDAO capabilityDAO;
 	
 	
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+		LOG.info("loadUserByUsername");
 		Map<String, Object> params = new HashMap<>();
 		params.put("userName", username);
 		//fetch user with username
@@ -33,24 +40,31 @@ public class AccountUserDetailsService implements UserDetailsService {
 		if(user == null){
 			throw new UsernameNotFoundException("Could not find user " + username);
 		}
-		return new AccountUserDetails(user);
+		
+		//create UserLoginDTO from user
+		UserLoginDTO userLoginDTO = new UserLoginDTO(user);
+		
+		params.clear();
+		params.put("id", user.getId());
+		Collection<Capability> capabilities = capabilityDAO.getMany("getUserCapabilities", params);
+		
+		//set capabilities in UserLoginDTO
+		userLoginDTO.setCapabilities(capabilities);
+		return new AccountUserDetails(userLoginDTO);
 	}
 	
 	/**
 	 * Implement UserDetails
 	 *
 	 */
-	private static final class AccountUserDetails extends User implements UserDetails{
-		@Autowired
-		private CapabilityDAO capabilityDAO;
-		
+	private static final class AccountUserDetails extends UserLoginDTO implements UserDetails{
 		/**
 		 * Generated Serial
 		 */
 		private static final long serialVersionUID = -3783991284033523909L;
 
-		private AccountUserDetails(User user){
-			super(user);
+		private AccountUserDetails(UserLoginDTO userLoginDTO){
+			super(userLoginDTO);
 		}
 		
 		/**
@@ -58,13 +72,10 @@ public class AccountUserDetailsService implements UserDetailsService {
 		 */
 		@Override
 		public Collection<? extends GrantedAuthority> getAuthorities(){
-			Map<String, Object> params = new HashMap<>();
-			params.put("id", getId());
-			Collection<Capability> capabilities = capabilityDAO.getMany("getUserCapabilities", params);
 			//make list of capability names
-			String[] auths = new String[capabilities.size()];
+			String[] auths = new String[getCapabilities().size()];
 			int i = 0;
-			for(Capability c : capabilities){
+			for(Capability c : getCapabilities()){
 				auths[i] = c.getName();
 				i++;
 			}
@@ -93,7 +104,7 @@ public class AccountUserDetailsService implements UserDetailsService {
 
 		@Override
 		public String getUsername() {
-			return getUsername();
+			return getUserName();
 		}
 	}
 

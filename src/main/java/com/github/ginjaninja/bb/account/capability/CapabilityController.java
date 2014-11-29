@@ -3,6 +3,8 @@ package com.github.ginjaninja.bb.account.capability;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -23,6 +25,8 @@ import com.github.ginjaninja.bb.message.ResultMessage;
 @Controller
 @RequestMapping(value={"capability"})
 public class CapabilityController extends ControllerExceptionHandler implements ControllerInterface<Capability>{
+	private static final Logger LOG = LoggerFactory.getLogger("CapabilityController");
+	
 	@Autowired
 	private CapabilityService capabilityService;
 	
@@ -247,6 +251,25 @@ public class CapabilityController extends ControllerExceptionHandler implements 
 			@RequestParam(value="capability") Integer capabilityId){
 		HttpStatus status;
 		ResultMessage message = capabilityService.removeCapabilityFromAccount(accountId, capabilityId);
+		if(message.getType().equals(ResultMessage.Type.ERROR)){
+			status = HttpStatus.NOT_FOUND;
+		}else{
+			status = HttpStatus.OK;
+		}
+		return new ResponseEntity<ResultMessage>(message, status);
+	}
+	
+
+	/**
+	 * Fetch all capabilities for user
+	 */
+	@RequestMapping(params="user", method = RequestMethod.GET)
+	@ResponseBody
+	public ResponseEntity<ResultMessage> getUserCapabilities(@RequestParam Integer user) {
+		HttpStatus status;
+		Map<String, Object> params = new HashMap<>();
+		params.put("id", user);
+		ResultMessage message = capabilityService.getMany("getUserCapabilities", params);
 		if(message.getType().equals(ResultMessage.Type.ERROR)){
 			status = HttpStatus.NOT_FOUND;
 		}else{
