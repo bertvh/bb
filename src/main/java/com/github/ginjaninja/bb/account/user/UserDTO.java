@@ -112,10 +112,4 @@ public class UserDTO extends DomainDTO {
 	public void setUserRole(RoleDTO userRole) {
 		this.userRole = userRole;
 	}
-
-<<<<<<< HEAD
-=======
-	
->>>>>>> security
-    
 }
