@@ -14,9 +14,7 @@ import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.github.ginjaninja.bb.domain.DomainObject;
-import com.github.ginjaninja.bb.utils.CustomDateSerializer;
 
 @NamedQueries({
 	@NamedQuery(

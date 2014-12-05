@@ -188,4 +188,6 @@ public class User extends DomainObject {
 	public void setActivityDtTm(Date activityDtTm) {
 		this.activityDtTm = activityDtTm;
 	}
+
+	
 }

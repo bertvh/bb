@@ -113,5 +113,9 @@ public class UserDTO extends DomainDTO {
 		this.userRole = userRole;
 	}
 
+<<<<<<< HEAD
+=======
+	
+>>>>>>> security
     
 }
