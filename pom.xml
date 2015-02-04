@@ -337,14 +337,14 @@
 		   <plugin>
             <groupId>com.qmino</groupId>
             <artifactId>miredot-plugin</artifactId>
-            <version>1.5.1</version>
-            <!-- <executions>
+            <version>1.6.0-SNAPSHOT</version>
+            <executions>
                <execution>
                   <goals>
                      <goal>restdoc</goal>
                   </goals>
                </execution>
-            </executions> -->
+            </executions>
             <configuration>
                <licence>UHJvamVjdHxjb20uZ2l0aHViLmdpbmphbmluamEuYmJ8MjAxNy0wMS0yMXx0cnVlI01Dd0NGRVBUL2ttTk9aUzB5WjArc0xvTmFLbkRXcS9MQWhSUHJKVHdzbFhLRG1XSXZoN2NJN2hyK1p4Yk1BPT0=</licence>
                <restModel>
